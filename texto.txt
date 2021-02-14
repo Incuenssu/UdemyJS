@@ -1,0 +1,142 @@
+Mozilla tutorial
+    https://developer.mozilla.org/es/docs/Web/JavaScript
+
+Cosas interesantes que saber
+    const numNeighbours = prompt('How many neighbour countries does your country have?')
+        Aparece un recuadro con la pregunta y guarda la variable en numNeighbours
+
+How to use modern JS today
+    ES5
+        fully supported in all browsers (down to IE9 from 2011)
+        Ready to be used today
+    ES6/ES2015 to ES2020
+        ES6+: well supported in all modern browsers
+        No support in older browsers
+        Can use most features in production with transpiling and polyfilling(Babel)
+        Compatibility table: https://kangax.github.io/compat-table/es6/
+    ES2021
+        ESNext: future versions of the language (new feature proporsals that reach stage 4)
+        Can already use some features in production with transpiling and polyfilling
+    En este curso aprenderemos ES6 pero hay algunas cosas que saber en ES5(por ejemplo en ES5 se usaba var y en ES6+ se usa let y const).
+        Es necesario para saber como funciona JS mejor
+        Muchos tutoriales estan en ES5
+        Cuando trabajemos en codebases antiguas, deben estar escritas en ES5
+
+7 Primitive Data Types. But JS automatic detect the type of data of the value stored in a variable.
+    Number: floating point number.
+    String: sequence of characters.
+    Boolean: true or false.
+    Undefined: value taken by a variable that is not yet defined.
+    Null: also means 'empty value'
+    Symbol(ES2015): value that is unique and cannot be changed.
+    BigInt (ES2020): larger integers than the number type can hold
+    Podemos descubrir el tipo de data usando typeof
+        typeof true     Resultado: Boolean
+
+let, const and var
+    Let(ES6): Variable that changes in future.
+        let age;
+        let age = 30;
+    Const(ES6): Variable that will not change in the future.
+        const birthYear = 1990;
+        NOT ALLOWED const birthYear;
+    Var: old way to define variables. Same use like "let"
+
+Operators
+    + - * / = !=
+    Exponential(**): 2 ** 3 -> 2*2*2
+    Contracciones(+=): por ejemplo x = 15;
+        x += 10; x = 25
+        x *= 2; x = 50
+        x++; x= 51
+    Comparison
+        < <= > >=
+
+Strings
+    Ejemplo:
+        const name = "Jonas";
+        const year = 2021;
+        const birthYear = 1990;
+    Podemos concatenar strings
+        const presentation = "I'm " + name + " and I have " + (year - birthYear) + " years old";
+    Pero tambien podemos concatenar strings asi
+        const newpresentation = ´I'm ${name} and I have ${year - birthYear} years old´
+        OJO que no son ni "dobles" ni 'simples', es la de debajo del `exponencial`
+
+Type Conversion and Coercion
+    Conversion
+        manually convert from one type to another
+            const inputYear = '1990';
+            console.log(inputYear + 18);                    Resultado: 199018
+            console.log(Number(inputYear), inputYear)       Resultado: 1990 "1990"
+            console.log(Number(inputYear) + 18)             Resultado: 2008
+            console.log(Number('Jonas'))                    Resultado: NaN
+    Coercion
+        JS automatically converts types behind the scenes for us
+            console.log('I am ' + 30 + ' years old')        JS transform "23" into a String
+            console.log('23' - '10' - 3)                    Resultado: 10
+            console.log('23' + '10' + 3)                    Resultado: 23103
+            console.log('23' * '2')                         Resultado: 46
+            console.log('23' > '18')                        Resultado: true
+            Funciona para todos los operadores el cambio de string a number menos para la suma "+"
+            let n = '1' + 1;    // 11
+            n = n - 1;          // 10
+            '10' - '4' - '3' - 2 + '5'      //15
+
+Boolean Operators
+    AND : &&
+    OR : ||
+    NOT : !== 
+        bool = true; 
+        !bool = false;
+
+Switch Statement
+    Se usa como IF pero cuando hay muchos casos, y en vez de usar ELSE IF continuamente usamos el esquema Switch
+    Switch(day){
+        case "monday":  // day === "monday"
+            console.log("On monday, plan course structure.")
+            console.log("Go to coding")
+            break         Sin el break, el codigo continua ejecutandose. Si lo quitamos este break se ejecutaria monday y tuesday
+        case "tuesday":
+            console.log("On tuesday, ...")
+            break
+        case "wednesday":
+        case "thursday":            //Si ponemos esta estructura de dos case seguidos, para ambos se ejecuta el console.log
+            console.log("On wednesday and thursday, ...)
+            break
+        default:
+            console.log("Para cuando no se cumple ningun caso")
+    }
+    Cada dia se usa menos, pero en ocasiones es mejor usarlo
+
+Statement and Expresions
+    Expresions: producen values. No generan acciones.
+    Statements: no producen values. Generan acciones.
+        if (23<10){                             Todo el if es un Statement
+            const str = "23 isn't bigger"       Esto tambien es un Statement, pero el "23 isn't bigger" es una Expresion. y str tambien es una expresion
+        }
+    Es importante saber la diferencia porque JS permite usar Statements y Expresions o no.
+        Ejemplo:
+            console.log(`i am ${2020 - 1990} years old.`)                               Permitido
+            console.log(`i am ${if(2020 > 1990) {const edad = "30"}} years old.`)       No permitido
+    
+The Conditional/Ternary Operator
+    Es igual que el IF/ELSE pero todo en una linea
+        const age = 30
+            // Condicion ? Que pasa si true : que pasa si false
+        age >= 18 ? console.log("I can drive.") : console.log("I can't drive.")
+    La forma de usar el condicional realmente es:
+        const drive = age >= 18 ? "can" : "can't"
+        console.log(drive)
+    Con IF/ELSE quedaria
+        let drive
+        if (age > 18){
+            drive = "can"
+        } else {
+            drive = "can't"
+        }
+        console.log(drive)
+    Pero como el Conditional es una expresion podemos aprovecharnos de ello
+        console.log(`I ${const drive = age >= 18 ? "can" : "can't"} drive.`)
+    
+

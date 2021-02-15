@@ -4,6 +4,14 @@ Mozilla tutorial
 Cosas interesantes que saber
     const numNeighbours = prompt('How many neighbour countries does your country have?')
         Aparece un recuadro con la pregunta y guarda la variable en numNeighbours
+    Si queremos quedarnos con solo 2 decimales en una cuenta usamos toFixed(Decimales)
+        let n = (1441/7900)*100     Resultado: 18.240506329113924
+        n = n.tofixed(2)            Resultado: 18.24
+        console.log(percentageOfWorld1(population).toFixed(4))
+
+
+
+---------------------- FUNDAMENTOS JS PARTE 1 ----------------------
 
 How to use modern JS today
     ES5
@@ -139,4 +147,266 @@ The Conditional/Ternary Operator
     Pero como el Conditional es una expresion podemos aprovecharnos de ello
         console.log(`I ${const drive = age >= 18 ? "can" : "can't"} drive.`)
     
+
+
+---------------------- FUNDAMENTOS JS PARTE 2 ----------------------
+
+Strict mode
+    It is a mode that will can enable in JS, it makes more secure write code
+    To activate it, in the first line of the JS archive we write
+        'use strict'
+    It can be enabled and disabled for pieces of code
+    Make it easier for us developers to avoid accidental errors. Help us introduce bus into our code.
+        Stric mode forbids us to do certain things
+        It will actually create visible errores for us in certain situations in wich without strict mode JS will simply fail silently.
+    Example:
+        let hasDriversLicense = false
+        const passTest = true
+        if (passTest) hasDriverLicense = true
+        if (hasDriversLicense) console.log("I can't drive.")        Resultado: Nothing appears and no error is displayed
+    Example 2:
+        'use strict'
+        let hasDriversLicense = false
+        const passTest = true
+        f (passTest) hasDriverLicense = true
+        if (hasDriversLicense) console.log("I can't drive.")        Resultado: Appear an error in the console
+    Strict mode also reserve some words
+        let interface
+        let private
+        let if
+
+Functions
+    It is a piece of code that can be used over and over again in our code
+    Creation function
+        FUNCTION name (parameters) {}
+        function loggger () {console.log("Hi")}
+    Calling / running / invoking function
+        NAME()
+        logger()
+    The functions have return of values
+        function fruitProcessor(apples, oranges) {
+            const juice = `Juice with ${apples} apples and ${oranges} oranges.`
+            return juice
+        }
+        const applejuice = fruitProcessor(5, 4)     //We need to save the return in a variable or use directly, not calling the return.
+        console.log(juice)                          Resultado: Error
+        console.log(applejuice)                     Resultado: Juice with 5 apples and 4 oranges.
+        console.log(fruitProcessor(9, 41))           Resultado: Juice with 9 apples and 41 oranges.
+
+Function expresion and declaration
+    Function declaration
+        function calcAge1(birthYear){
+            return 2020 - birthYear
+        }
+        const age1 = calcAge1(1990)
+        console.log(age1)
+    Function expresion
+        const calcAge2 = function (birthYear){
+                            return 2020 - birthYear
+                         }
+        const age2 = calcAge2(1990)
+        console.log(age2)
+    In declaration we can call first the variable and later the function, in expresion we can't do it
+        const age2 = calcAge2(1990)
+        const calcAge2 = function (birthYear){
+                            return 2020 - birthYear
+                         }
+        Resultado: It don't works
+        const age1 = calcAge1(1990)
+        function calcAge1(birthYear){
+            return 2020 - birthYear
+        }
+        Resultado: It works
+    In practice, we can use both of them, it depends on the preference of the developer
+
+Arrow functions
+    Is a special form of function expression that is shorter and faster to write.
+    Normal function:
+        const calcAge2 = function (birthYear){
+            return 2021 - birthYear
+        }
+    Arrow function:
+        const calcAge3 = birthYear => 2021 - birthYear
+        const age3 = calcAge3(1990)
+        console.log(age3)
+    If we need more complexity
+        const yearsUntilRetirement = (birthYear, firstName) => {
+            const age = 2021 - birthYear
+            const retirement = 65 - age
+            return `${firstName} retires in ${retirement} years`
+        }
+        console.log(yearsUntilRetirement(1990, "Jose Luis"))
+    
+Calling other Functions
+    Example:
+        let cutFruitPiece = fruit => fruit * 4
+        function fruitProcessor (apples, oranges){
+            const applePieces = cutFruitPiece(apples)       //applePieces = 2 * 4
+            const orangePieces = cutFruitPiece(oranges)     //orangePieces = 3 * 4
+            const juice = `Juice with ${applePieces} piece of apple and ${orangePieces} pieces of orange.`
+            return juice
+        }
+        console.log(fruitProcessor(2,3))
+
+Arrays
+    Creation
+        const friends = ["Jose Luis", "Pepito", "Pedro", "Horse Lluis"]
+        const years = new Array (1990, 1991, 1992, 1993)
+    Calling Arrays
+        friends[0]
+        years[3]
+    Complexity
+        const me = ["John", "Perez", 2021 - 1985, friends]      Array inside of a Array
+    With functions
+        const years = [1990, 1991, 1992, 1993]
+        const calcAge = function (birthYear){
+            return 2021 - birthYear
+        }
+        const ages = [calcAge(years[0]), calcAge(years[1]), calcAge[years(years.length])]
+    Adding elements to the Array
+        frients.push("Antonio")         Antonio is added to the end of the array
+        friends.unshift("Pedrito")      Pedrito is added to the beginning of the array
+    Removing elements to the Array
+        friend.pop()                    The last element of the array will be removed
+            const popped = years.pop()      Resultado(console.log): 1993
+        friends.shift()                 The first element of the array will be removed
+    Finding an element in the array
+        friends.indexOF("Pepito")       Resultado(c.l): 1
+        friends[friends.indexof("Pepito)] = "Pepe"
+
+Objects
+    structure
+        const jonasArray = {
+            //propierty : value
+            firstName : "Jonas",
+            lastName : "Perez",
+            Age : 2021 - 1991,
+            Job : "Teacher",
+            Friend : ["Michael", "Peter", "Steven"]
+        }
+    Creating objects with functions
+        const funcion = function (nombre, apellido, edad) {
+            const objeto = {
+                firstName: nombre,
+                lastName: apellido,
+                age: edad
+            }
+        return objeto
+        }
+        const persona = funcion("Antonio", "Gonzalez", 55)       Resultado: const objeto = {firstName: "Antonio", lastName: "Gonzalez", age: 55}
+    DOT vs BRACKET notation
+        DOT
+            persona.name                         Resultado: Antonio
+        BRACKET
+            persona["name"]                      Resultado: Antonio
+            Inside the brackets we can use any expresion.
+                const nameKey = "Name"
+                persona.["first" + nameKey]         Resultado: Antonio
+                persona.["last" + nameKey]          Resultado: Gonzalez
+                persona."first" + nameKey           Resultado: error
+            Using brackets and prompt
+                const interestedIn = prompt("What do you want to know about the person? Choose between fistName, lastName, age and friends")
+                console.log(persona.interestedIn)           Resultado: Error
+                console.log(persona[interestedIn])          Resultado(age): 55
+
+Objects methods
+    Any function that is attached to an object is called a "METHOD". Consists in use functions in objects
+        const jonas = {
+            firstName : "Jonas",
+            lastName : "Perez",
+            birthYear: 1992,
+            hasDriversLicense: true,
+        --> calcAge: function(birthYear){
+                return 2021 - birthYear
+            }
+        }
+    Accesing to the method
+        jonas.calcAge(1991)
+        jonas["calcAge"](1991)
+    Accesing to the method with parameters inside the object
+        const jonas = {
+            firstName : "Jonas",
+            lastName : "Perez",
+            birthYear: 1992,
+            hasDriversLicense: true,
+        --> calcAge: function(){
+                return 2021 - this.birthYear        //We use the word "THIS" to use a propierty inside the same object
+            }
+        }
+    It is posible to use the name of the object instead of "this" but is not recomendable at all
+        const jonas = { calcAge: function(){ return 2021 - jonas.birthYear } }
+    Instead of calculate again and again the method, is better to calculate once and save in a variable inside the object
+        const jonas = {
+            firstName : "Jonas",
+            lastName : "Perez",
+            birthYear: 1992,
+            hasDriversLicense: true,
+        --> calcAge: function(){
+                this.age = 2021 - this.birthYear
+                return this.age
+            }
+        }
+    --> Be carefull, it is necesarry first call the method and later we can call the return
+        console.log(`The age of Jonas is ${jonas.age}`)             Resultado: The age of Jonas is Undefined
+        jonas.calcAge()
+        console.log(`The age of Jonas is ${jonas.age}`)             Resultado: The age of Jonas is 29
+        console.log(`Jonas need work ${65 - jonas.age} years to retires`)
+
+The FOR loop
+    FOR loops keeps running while condition is TRUE
+    Structure 
+        for (let i = 0 ; i <= 10 ; i++){
+            console.log(`What ever ${i}`)
+        }
+    Arrays
+        for (let i = 0 ; ; i++){
+            console.log(friends[i])
+        }
+        const numbers = [1, 2, 4, 56, 67, "numero", 128]
+        let percentages = []
+        for (let i = 0; i < numbers.length; i++) {
+            percentages[i] = (numbers[i]/6)*100
+                    The same is:
+            percentages.push( (numbers[i]/6)*100 )
+        }
+    Continuing
+        for (let i = 0; i < numbers.length; i++) {
+            if (typeof numbers[i] === 'string') continue            //When number is a string, the loop continue but pass next.
+            percentag[i] = (numbers[i] / 6) * 100
+            console.log(number[i])                                  Resultado: 1, 2, 4, 56, 67, 128
+        }
+    Breaking
+        for (let i = 0; i < numbers.length; i++) {
+            if (numbers[i] == 4) break                  //When number = 4, the loop not continue
+            percentages[i] = (numbers[i]/6)*100
+            console.log(number[i])                      Resultado: 1, 2
+        }
+    Loop inside a loop
+        for (let i = 1; i < 3; i++) {
+            console.log(`Exercise ${i}`)
+            for (let j = 1; j < 5; j++) {
+                console.log(`Lifting repetition ${j}`)
+            }
+        }
+    Backwards
+        for (let i = 10; i > 7; i--) {
+            console.log(i)                  Resultado: 10, 9, 8
+        }
+
+The WHILE loop
+    Structure
+        let rep = 1
+        while (rep <= 10){
+            console.log(`WHILE: Lifting repetition ${rep}`)
+            rep++
+        }
+    WHILE loop is more versatile than FOR loop
+
+
+
+---------------------- DEVELOPER SKILLS AND EDITOR SETUP ----------------------
+
+sdfghj
+
+
 

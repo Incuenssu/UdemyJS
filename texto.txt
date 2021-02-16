@@ -406,7 +406,77 @@ The WHILE loop
 
 ---------------------- DEVELOPER SKILLS AND EDITOR SETUP ----------------------
 
-sdfghj
+Prettier
+    on save, prettier apply formats like ";"
+    It can be configurated creating a file called ".pretierrc" and putting settings like:
+        {
+            "tabWidth": 4,
+            "singleQuote": true,
+            "arrowParens": "avoid"
+        }
 
+Snippets
+    Is a file where we can configure shortcuts like "console.log()" by ""
+    Creating
+        Preferences
+        User Snippets
+        New Global Snippets file
+            We choose a name
+    Structure
+        "Print to console": {                           // Name of the Snippet
+            "scope": "javascript,typescript",           // Used in
+            "prefix": "cl",                             // When we type "cl" the snippet will be enabled
+            "body": ["console.log($1);"],               // The reference of the snippet. "$1": put the cursor in this site 
+            "description": "Log output to console"      // Description
+        }
+        
+Settings Sync
+    To Synchronice Setting along differents PCs or users
 
+Live Server
+    We can use a VS extension or use NodeJS wich is more professional, using npm package called Live Server
+    1. Is necesary install NodeJs (google it and install)
+    2. In terminal we write
+        sudo npm install live-server -g
+        live-server
 
+Coding Challenges
+    https://www.codewars.com
+    Thousands of coding challenges
+
+Problem solver
+    1. Make sure you 100% understand the problem.
+        Ask the right questions to get a clear picture of the problem.
+    2. Divide and conquer
+        Break a bif problem into smaller sub-problems
+    3. Don't be afraid to do as much research as you have to.
+        Google, Stack Overflow, MDN web docs.
+    4. For bigger problems, write pseudo-code before writing the actual code.
+        It's like code for humans to understand, not computers. It's not even JS, just schematic.
+
+Debugging
+    Find and fixing errors
+    Software bug: defect or problem in a computer program. Basically, any unexpected or unintended behavior of a computer program is a software bug.
+    Bugs are completely normal in software devvelopment
+    Debugging: process of finding, fixing and preventing bugs.
+    Debugging process
+        Identify: becoming aware that there is a bug
+            During development
+            Testing software
+            User reports during production
+            Context: browsers, users, etc.
+        Find: isolating where exactly the bug is happening in code
+            Developer console (simply code)
+            Debugger (complex code)
+        Fix: correct the bug
+            Replace wrong solution with new correct solution
+        Prevent: preventing it form happening again
+            Searching for the same bug in similar code
+            Writing test using testing software
+
+Debugging using the console
+    Consist in prove and error
+
+Debugger
+    We use Chrome Inspect tool
+        Click in Sources and user breakpoints: the breakpoints stops the JS code when we want and we can go step by step looking the code

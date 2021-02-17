@@ -8,6 +8,7 @@ Cosas interesantes que saber
         let n = (1441/7900)*100     Resultado: 18.240506329113924
         n = n.tofixed(2)            Resultado: 18.24
         console.log(percentageOfWorld1(population).toFixed(4))
+    Para mover una linea hacia abajo/arriba en VS usamos ALT y la flecha abajo/arriba
 
 
 
@@ -480,3 +481,51 @@ Debugging using the console
 Debugger
     We use Chrome Inspect tool
         Click in Sources and user breakpoints: the breakpoints stops the JS code when we want and we can go step by step looking the code
+
+
+---------------------- JS IN THE BROWSER: DOM AND EVENTS FUNDAMENTALS ----------------------
+
+DOM
+    Document Object Model: structured representation of HTML documents. Allows JS to access HTML elements and styles to manipulate them.
+    We change text, change HTML attributes and even CSS styles.
+    The DOM is bassically a conexion between HTML documents and JS code.
+    The DOM is automatically created as soon as the browsers loads the HTML page and stores in a tree structure, and each of them is an object.
+        <head>
+            <section>
+                <p>
+                </p>
+                <p>
+                </p>
+            </section>
+        </head>
+    DOM methods and propierties for DOM Manipulation (for example document.querySelector()) ARE NOT PART OF JS
+    DOM methods and propierties (web API: application Programming Interface) CAN INTERACT WITH JS
+
+Select the element
+    document.querySelector('.message') ". and later we can write propierties"
+    document.querySelector('#mensaje')
+    
+Event Listener
+    .addEventListener(
+        'click',                                        // It is necesary tell that the triggers the listener
+        function () { console.log("Valor") }            // And what happen when the event is activated
+        );
+    const unaFuncion = function () {}
+    .addEventListener('click', unaFuncion);
+
+Manipulating CSS styles
+    document.querySelector('body').style ". and later the name of the propierty we want manipulate"
+    document.querySelector('body').style
+                                        .backgroundColor = '#60b347'
+                                        .border  = "2px solid #fff"
+                                        .fontSize = "25px"
+
+Refactoring
+    Eliminate duplicate code
+    DRY principle: not repeat code
+    Duplicate code:
+        when we want to change some functionality, we have to chenge the same code in multiple places
+        When we start coding, no big problem to start out with duplicate code
+    Refactoring
+        Restructure the code but without changing how it works, to improve the code and to eliminate duplicate code.
+        1. Indentify duplicate code.

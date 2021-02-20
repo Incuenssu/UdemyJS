@@ -512,6 +512,34 @@ Event Listener
         );
     const unaFuncion = function () {}
     .addEventListener('click', unaFuncion);
+    Types of keyboard events
+        KeyDown     ASA the key is pressed
+        KeyUp       Once we put out the finger
+        KeyPress    Continously
+
+Standards
+    In general, we call the classes or the IDs, and we stored this classes in variables, when later we use again and again
+        const btn = document.querySelector(".button-show")
+    When we use querySelector with multiple classes or elements, only select the first, in than case we use "querySelectorAll"
+        const btn = document.querySelectorAll(".button-show")
+        Once selected, we can use it similar than an Array
+        for (let i = 0; i < btn.length; i++) {
+            console.log(btn[i].textContent);
+        }
+    In real projects, adding and removing classes is the form of manipulation webs.
+        This is because added and remove many styles in just one class
+    If we need to call a function as soon as JS read/execute the line que put ()
+        btn.addEventListener('click', openmodal);          // Wait for the click
+        btn.addEventListener('click', openmodal());        // Inmediatly execute "closemodal"
+        But, if the function is inside another function, then we write ()
+        function(){
+            openmodal();
+        }
+    Most common uses of classes
+        btn.classList.add('hidden')
+        btn.classList.remove('hidden')
+        btn.classList.contains('hidden')
+        btn.classList.toggle("hidden")      // If has the class, remove the class. If hasn't the class, added the class
 
 Manipulating CSS styles
     document.querySelector('body').style ". and later the name of the propierty we want manipulate"
@@ -529,3 +557,28 @@ Refactoring
     Refactoring
         Restructure the code but without changing how it works, to improve the code and to eliminate duplicate code.
         1. Indentify duplicate code.
+
+Modal Windows
+    They are pop-ups windows, but in the same page, not new blanks.
+    Structure
+        <div class="modal hidden">                                  // Modal window class   (hidden -> display: none)
+              <button class="close-modal">&times;</button>          // Close button
+              <h1>I'm a modal window 😍</h1>                        // Title and text in the modal window
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                mollit anim id est laborum.
+              </p>
+        </div>
+        <div class="overlay hidden"></div>
+    CSS
+        display: none           // To hidden a element
+        display: block          // To show a element in a block window
+
+
+
+

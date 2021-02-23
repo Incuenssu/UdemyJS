@@ -101,7 +101,7 @@ const rojo = {
     year: 1990,
     calcAge: function () {
         console.log(this);
-        console.log(2021 - this.year); // Resultado: 31
+        //console.log(2021 - this.year); // Resultado: 31
     },
 };
 rojo.calcAge(); // The rojo object. With all of his attributes(year, calcAge)
@@ -114,3 +114,116 @@ azul.calcAge(); // The "This keyword" now point to azul, not to rojo. "This keyw
 
 const f = rojo.calcAge; // Copy the method to a function called "f"
 f(); // undefined. This happen because there is no owner of this "f" function. Same as calcAgeThis()
+
+console.log(
+    '------------------------ Regular functions vs Arrow functions examples ------------------------'
+);
+//Regular functions vs Arrow functions
+const amarillo = {
+    firstName2: 'Antonio',
+    year: 1990,
+    greet: () => console.log(`Hey ${this.firstName2}`),
+    greet2: function () {
+        console.log(`Hey ${this.firstName2}`);
+    },
+    // Inside a regular function call, "This keyword" must be undefined
+    //calcAge: function () {
+    //    const isMillenial = function () {
+    //        console.log(this); //undefined
+    //        console.log(this.year >= 1981 && this.year <= 1996);
+    //    };
+    //    isMillenial(); // Regular function call
+    //},
+    calcAgeSelf: function () {
+        const self = this; // We can use "self" or "that"
+        const isMillenial = function () {
+            console.log(self); //undefined
+            console.log(
+                `Self or that: ${self.year >= 1981 && self.year <= 1996}`
+            );
+        };
+        isMillenial(); // Regular function call
+    },
+    calcAgeArrow: function () {
+        const isMillenial = () => {
+            console.log(this);
+            console.log(
+                `Arrow function: ${this.year >= 1981 && this.year <= 1996}`
+            );
+        };
+        isMillenial(); // Regular function call
+    },
+};
+amarillo.greet(); // "Hey undefined" because (again) Arrow functions haven't "This Keyword". Amarillo is not a scope (global, function or block)
+console.log(`Hey ${this.firstName2}`); // Same case than greet(). Amarillo belongs to global scope. THIS = WINDOW
+var firstName2 = 'Matilda'; // If we have this variable in global scope. The arrow function can lead to error
+amarillo.greet(); // "Hey Matilda". This happen because "this.firstName2" belongs to window object, NOT to amarillo object
+amarillo.greet2(); // "Hey Antonio"
+//amarillo.calcAge(); // TypeError: Cannot read property 'year' of undefined
+amarillo.calcAgeSelf(); // It works. Self = amarillo object; console.log = true
+amarillo.calcAgeArrow(); // It works. Self = amarillo object; console.log = true
+// Arguments keyword
+const addExpr3 = function (a, b) {
+    console.log('Arguments keyword:');
+    console.log(arguments);
+    return a + b;
+};
+addExpr3(3, 4); // console.log = Array with arguments [3, 4]
+// Not illegal(Not error) to give more arguments than parameters
+addExpr3(3, 4, 8, 12); // console.log = Array with arguments [3, 4, 8, 12]
+var addArrow2 = (a, b) => {
+    console.log('Arguments keyword arrow:');
+    console.log(arguments); // Not exists in arror functions
+    return a + b;
+};
+//addArrow2(3, 4); // Arguments is not defined
+
+console.log(
+    '------------------------ Primitives vs Objects (primitive vs reference types)    ------------------------'
+);
+//Primitives vs objects (primitive vs reference types)
+// Primitive value example:
+let age = 30;
+let oldAge = age;
+age = 31;
+console.log(`Age(Memory 001): ${age}`); // Resultado: 31
+console.log(`oldAge(Memory 002): ${oldAge}`); // Resultado: 30
+// Reference value example:
+const me2 = {
+    name: 'Jose',
+    age: 30,
+};
+const friend = me2;
+friend.age = 27;
+console.log('Friend(Memory 003): ', friend); // Resultado: 27
+console.log('Me(Memory 003): ', me2); // Resultado: 27
+// Practice of Primitives vs Objects
+let lastName = 'Perez';
+let oldLastName = lastName;
+lastName = 'Gonzalez';
+console.log(oldLastName);
+console.log(lastName);
+const jessica = {
+    firstName: 'Jessica',
+    lastName: 'Perez',
+    age: 27,
+};
+const marriedJessica = jessica;
+marriedJessica.lastName = 'Gonzalez';
+console.log('Before marriage: ', jessica.lastName);
+console.log('After marriage: ', marriedJessica.lastName);
+//marriedJessica = {}; // This not work because we can not change the value to a new memory adress. If a let, this YES work
+// To copy a object and modify the new without modify the second
+const jessica2 = {
+    firstName: 'Jessica',
+    lastName: 'Perez',
+    age: 27,
+    family: ['Alice', 'Bob'],
+};
+const marriedJessica2 = Object.assign({}, jessica2);
+marriedJessica2.lastName = 'Davis';
+console.log('After marriage marriedJessica2: ', marriedJessica2.lastName);
+console.log('Before marriage Jessica2: ', jessica2.lastName);
+marriedJessica2.family.push('Antonio', 'Josefina');
+console.log('Family marriedJessica2: ', marriedJessica2.family); // The assign only work in the first level reference value
+console.log('Family Jessica2: ', jessica2.family); // Both objects gain the second level array(second level object)

@@ -9,6 +9,8 @@ Cosas interesantes que saber
         n = n.tofixed(2)            Resultado: 18.24
         console.log(percentageOfWorld1(population).toFixed(4))
     Para mover una linea hacia abajo/arriba en VS usamos ALT y la flecha abajo/arriba
+    CONST es solo invariable para primitives(Primitive values) pero si son objetos(Reference values) si que podemos cambiar su valor.
+        Primitives vs objects (primitive vs reference types)
 
 
 
@@ -863,3 +865,119 @@ This keyword
         new,call,apply,bind ---->           <Later in the course...>
 
 Regular functions vs Arrow functions
+    NEVER EVER use arrow functions as a method (function in object). The problem is "This keyword". The arrow functions haven't "This keyword".
+        const amarillo = {
+            firstName2: 'Antonio',
+            greet: () => console.log(`Hey ${this.firstName2}`),
+            greet2: function () { console.log(`Hey ${this.firstName2}`); },
+        };
+        amarillo.greet();                   // "Hey undefined". Amarillo object isn't a scope (global, function or block)
+        var firstName2 = 'Matilda';         // If we have this variable in global scope. The arrow function can lead to error
+        amarillo.greet();                   // "Hey Matilda". This happen because "this.firstName2" belongs to window object, NOT to amarillo object
+        amarillo.greet2();                  // "Hey Antonio". Normal functions have YES "This keyword"
+    Regular function called. Inside a regular function call, "This keyword" must be undefined
+        const amarillo = {
+            year: 1990,
+            calcAge: function () {
+                const isMillenial = function () {
+                    console.log(this);              //undefined
+                    console.log(this.year >= 1981 && this.year <= 1996);
+                };
+                isMillenial();                      // Regular function call. Resultado: TypeError: Cannot read property 'year' of undefined
+            },
+        };
+        amarillo.calcAge(); //TypeError: Cannot read property 'year' of undefined
+    Regular function called. Solutions
+        Use "self" or "that". Before ES6
+            calcAgeSelf: function () {
+                const self = this; const that = this    // We use "self" or "that" like as a reminder of "This keyword"
+                const isMillenial = function () {
+                    console.log(self);                  // Object amarillo
+                    console.log(that);                  // Object amarillo
+                    console.log(`Self or that: ${self.year >= 1981 && self.year <= 1996}`);
+                    console.log(`Self or that: ${that.year >= 1981 && that.year <= 1996}`);
+                };
+                isMillenial();                      // Regular function call. Resultado: true
+            },
+            Resultado: Self or that: true
+    --> Use Arrow function. After ES6
+            calcAgeArrow: function () {
+                const isMillenial = () => {
+                    console.log(this);
+                    console.log(
+                        `Arrow function: ${this.year >= 1981 && this.year <= 1996}`
+                    );
+                };
+                isMillenial(); // Regular function call
+            },
+            Resultado: Arrow function: true
+    Arguments keyword. Not important in moderns JS, use other ways
+        Only available in regular functions
+            const addExpr3 = function (a, b) {
+                console.log('Arguments keyword:');
+                console.log(arguments);                     // arguments YES exists
+                return a + b;
+            };
+            addExpr3(3, 4);                                 // console.log = Array with arguments [3, 4]
+            var addArrow2 = (a, b) => {
+                console.log('Arguments keyword arrow:');
+                console.log(arguments);                     // Not exists in arror functions
+                return a + b;
+            };
+            addArrow2(3, 4);                                // Arguments is not defined
+
+Primitives vs objects (primitive vs reference types)
+    Primitives are stored in CALL STACK
+        Primitive types: number, string, boolean, undefined, null, symbol, BigInt.
+    Objects are stored in HEAP.
+        Because objects might be too larg to be stored in the call stack, instead they are stored in the heap wich is like an almost unlimited memory pool
+        Reference types: object literal, arrays, functions, etc
+    Example:
+        Primitives
+            let age = 30;
+            let oldAge = age;
+            age = 31;
+            console.log(age);                   // Resultado: 31
+            console.log(oldAge);                // Resultado: 30
+        Objects 
+            const me = {
+                name: 'Jose',
+                age: 30,
+            };
+            const friend = me;
+            friend.age = 27;
+            console.log('Friend: ', friend);    // Resultado: 27
+            console.log('Me: ', me);           // Resultado: 27            Here we see how we can change CONST value
+    This happen because primitives are stored in differents memories and the object point into the same memory
+        Primitives
+            NAME            MEMORY          VALUE ADRESS
+            Age             Memory 001      30 ==> 31
+            oldAge          Memory 002      31
+            So, when we change the value of Age, we change the value of Memory 001, but the Memory 002 not change
+            Memory 001 -- Memory adress --> 30 ==> 31
+            Memory 002 -- Memory adress --> 31
+        Objects (Reference value)
+            me ----> Memory 003 (30 ==> 27) <---- friend
+            So, when we change the value of friend object, we change the value of Memory 003, wich is pointed by the 2 objects
+            Memory 003 -- Memory adress --> D30F
+    How to copy a new object and no modify the old object
+        const NAME = Object.assign ( {} , OBJECT )
+        const friend2 = Object.assign ( {} , me )
+        Example:
+            friend2.age = 27
+            console.log(friend2.age)        // Resultado: 27
+            console.log(me.age)             // Resultado: 30
+        But only work in the first level. If we have a object inside an object, this way don't work.
+            Both objects point to the same second level object
+            To do a "deep clone" we use an externals libraries like "Lo-Dash"
+
+3 more big topics of how JS works behind the scenes (for later..)
+    Prototypal Inheritance:         Object Oriented Programming (OOP) With JavaScript               in Section 14
+    Event Loop:                     Asynchronous JavaScript: Promises, Async/Await and AJAX         in Section 16
+    How the DOM Really Works:       Advanced DOM and Events                                         in Section 13
+
+
+---------------------- DATA STRUCTURES, MODERN OPERATORS AND STRINGS ----------------------
+
+Which data structure to Use
+

@@ -11,6 +11,14 @@ Cosas interesantes que saber
     Para mover una linea hacia abajo/arriba en VS usamos ALT y la flecha abajo/arriba
     CONST es solo invariable para primitives(Primitive values) pero si son objetos(Reference values) si que podemos cambiar su valor.
         Primitives vs objects (primitive vs reference types)
+    Metodo entries
+        Es un array dentro de un array que contiene el valor y su posicion
+            const array = ["Array1", "Array2", "Array3"]
+            console.log([...array.entries()])
+                [0, "Array1"]
+                [1, "Array2"]
+                [2, "Array3"]
+        Ejemplo en For-Of en tema 09
 
 
 
@@ -979,5 +987,423 @@ Primitives vs objects (primitive vs reference types)
 
 ---------------------- DATA STRUCTURES, MODERN OPERATORS AND STRINGS ----------------------
 
-Which data structure to Use
+Destructuring arrays
+    Destructuring is an ESx feature and it's basically a way of unpacking values from an array or an object into separate variables
+    Creating arrays
+        const array = []
+    Types of assign variables to array value
+        const arr = [2, 3, 4, 5, 6, 7, 8];
+        First type
+            let a = arr[0];           // a = 2
+            let b = arr[1];           // b = 3
+            let c = arr[4];           // c = 6
+        Second type
+            let [x, y, , , z] = arr;      //x = 2; y = 3; z = 6
+    Reassign / mutating (Example: change value between a and b)
+        First
+            const temp = a          // temp = 2
+            a = b                   // a = 3
+            b = temp                // b = 2
+        Second
+            [a, b] = [b, a];        // a = 3; b = 2
+    Receive 2 return values from a function
+        const restaurant = {
+            starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+            mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+            order: function (starterIndex, mainIndex) {
+                return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+            },
+        };
+        const [starter, mainCourse] = restaurant.order(2, 0);               // starter = "Garlic Bread"; mainCourse = "Pizza"
+    Nested: one array inside another array
+        const nested = [2, 4, [5, 6]];
+        const [i, , j] = nested                         // i = 2; j = [5,6]
+        const [i, , [j, k]] = nested;                   // i = 2; j = 5; k = 6
+    Default values. For example, when we don't know how long in an array
+        const [p, q, r] = [8,9]             // p = 8; q = 9; r = undefined
+        const [p=1, q=1, r=1] = [8, 9]      // p = 8; q = 9; r = 1
 
+Destructuring objects
+    Creating objects
+        const object = {}
+        const {object1, object2, object3} = {direccion1, direccion2, direccion3}
+    Example
+        const restaurant = {
+            name: 'Classico Italiano',
+            location: 'Via Angelo Tavanti 23, Firenze, Italy',
+            categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+            starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+            mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+            openingHours: {
+                thu: {
+                    open: 12,
+                    close: 22,
+                },
+                fri: {
+                    open: 11,
+                    close: 23,
+                },
+                sat: {
+                    open: 0, // Open 24 hours
+                    close: 24,
+                },
+            },
+        };
+    Creating new objects with the same name than the propierties
+        const {name, openingHours, categories} = restaurant             // They are the same
+    Creating new objects with different name than the propierties
+        const { name: restaurantName, openingHours: hours, categories: tags} = restaurant;
+        console.log(restaurantName, hours, tags);                       // Same
+    Default values. When the propierty don't exist
+        const { menu, starterMenu: starters} = restaurant;              // menu = undefined
+        const { menu = [], starterMenu: starters = [] } = restaurant;   // If the property don't exist, the object = [empty array]
+    Mutating
+        It is different from array, we need to put () outside {} because JS when see {} expects complex code
+            let a = 111;
+            let b = 999;
+            const obj = { a: 23, b: 7, c: 14 };
+            ({ a, b } = obj);                       // a = 23; b = 7
+    Nested(objects inside objects). Example: openingHours inside restaurant
+        const { fri } = openingHours;               // Resultado: { open: 11, close: 23}
+        const {
+            fri: { open, close },
+        } = openingHours;
+        console.log(open, close)                    // Resultado: 11 23
+        const {
+            fri: { open: o, close: n },
+        } = openingHours;
+        console.log(o, n);                          // Resultado: 11 23
+    Automatic destructuring
+        const restaurant = {
+            ...
+            orderDelivery: function ({ starterIndex, mainIndex, time, address }) {
+                    console.log(
+                        `Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`
+                    );
+                },
+            ...
+        }
+        restaurant.orderDelivery({
+            time: '22:30',
+            address: 'Calle Falsa, 234',
+            mainIndex: 2,
+            starterIndex: 2,
+        });                                     Resultado: Order received! Garlic Bread and Risotto will be delivered to Calle Falsa, 234 at 22:30
+
+The spread operator "..."
+    Used to expand an array into all its elements, so basically unpacking all the array elements at one
+    Structure
+        const arr2 = [7, 8, 9];
+        const badNewArr = [1, 2, arr2[0], arr2[1], arr2[2]];        // Or use FOR loop. Resultado: badNewArr = [1,2,7,8,9]
+        const NewGoodArray = [1, 2, ...arr2];                       // Resultado: NewGoodArray = [1,2,7,8,9]
+    It is used to expand arrays (like example before) or when we pass arguments into functions
+    Expand array individually
+        console.log(...NewGoodArray);       // 1 2 7 8 9 // Number by number
+    Shadow copies of arrays (Similar to object.assign() but more easier to use)
+        const mainMenuCopy = [...restaurant.mainMenu]
+    Merge two arrays together
+        const menuMerge = [...restaurant.mainMenu, ...restaurant.starterMenu];
+    The spread operator works on all so-called iterables
+        Iterables: things like all arraysm strings, maps or sets and objects (since ES2018 although objects are not iterables)
+        Strings
+            const str = 'Jose';
+            const letters = [...str];       // Resultado: letters ["J", "o", "s", "e"]
+    Multiple values separated by a comma are usually only expected when we pass arguments into a function
+        console.log (...str)                // Resultado: J o s e
+        console.log(`${...str} Antonio`)    // Error
+    Method to spread operator example
+        const restaurant = {
+            ...
+            orderPasta: function (ing1, ing2, ing3) {
+                console.log(
+                    `Here is your delicious pasta with ${ing1}, ${ing2} and ${ing3}`
+                );
+            },
+        };
+        const ingredients = ['Champiñones', 'Aceitunas negras', 'Tomate', 'Pepinillos'];
+        restaurant.orderPasta(...ingredients);              // Resultado: Here is your delicious pasta with Champiñones, Aceitunas negras and Tomate
+    Since ES2018 spread operator actually also work on objects(objects are not iterables)
+        const newRestaurant = { founderYear: 1985, ...restaurant, founder: 'Guiseppe' };
+        Shadow copies
+            const restaurantCopy = {...restaurant}
+            In this case we can change values and not affect to the first object. The 2 objects NOT point to the same memory
+            Previous
+                const restaurante2 = restaurant
+                restaurante2.name = "Restaurante Bonito"
+                console.log(restaurante2.name)              // Resultado: Restaurante Bonito
+                console.log(restaurant.name)                // Resultado: Restaurante Bonito
+                restaurant ----> Memory 001 <---- restaurante2
+            Now
+                const restaurante2 = {...restaurant}
+                restaurante2.name = "Restaurante Bonito"
+                console.log(restaurante2.name)              // Resultado: Restaurante Bonito
+                console.log(restaurant.name)                // Resultado: Classico Italiano
+                restaurant ---->    Memory 001
+                restaurante2 ---->  Memory 002
+        Merge
+            const restaurantDelivery = {
+                name: "Restaurant deliveroo"                // In this case overwrite this property, because is the second merging
+                address: 'Calle falsa, 123',
+                phone: '555 666 777',
+                doors: 3,
+            };
+            const restaurantmerge = { ...restaurant, ...restaurantDelivery };
+            console.log(restaurantmerge);
+
+Rest pattern and parameters
+    Exactly like spread operator but Rest Pattern works than spread operator. Rest Pattern works to collect multiple elements and condense them into an array
+    Spread is used in right side of =
+        const spread = [1, 2, ...arr]                                       // spread = [1, 2, 7, 8, 9]
+    Rest is used in LEFT side of =
+        const [a, b, ...others] = [1, 2, 3, 4, 5]                           // a = 1; b = 2; others = [3, 4, 5]
+        const [a, b, others] = [1, 2, 3, 4, 5];                             // a = 1; b = 2; others = 3
+    We can't use in the middle
+        const [a, b, ...others, c] = [1, 2, 3, 4, 5]                        // Error
+    It works in Objects. It will be collected into a new object and not into a new array
+        const { sat, ...weekDays } = restaurant.openingHours;               // sat = {...}; weekDays ={thu:{...}, fri:{...}}
+        console.log(sat, weekDays);
+    Example of use:
+        const add = function (...numbers) {                     
+            let sum = 0;
+            for (let i = 0; i < numbers.length; i++) {
+                sum += numbers[i];
+            }
+            console.log(sum);
+        };
+        add(2, 3);                              // Resultado: 5
+        add(5, 3, 7, 2);                        // Resultado: 17
+        add(8, 2, 5, 3, 2, 1, 4);               // Resultado: 25
+        const arrayParameter = [23, 5, 7];
+        add(...arrayParameter);                 // Resultado: 35
+    We write "...numbers" in parameters because the function accept arrays [add(...arrayParameter)] and simply numbers [add(5, 3, 7, 2);]
+
+Short circuiting (&& and ||)
+    We can use AND and OR operators more than boolean values
+    OR operator
+        return the first true value.
+    AND operator
+        return the last true value. If all are true
+        returnt the first false value if at least one is false
+    OR popierties
+        They can use any data type
+            console.log (3 || "Jonas")
+        Return any data type
+            Resultado: 3
+        Short-ciruiting, also called short circuit evaluation
+            If the first value is TRUE, the other will not even be evaluated(JS will not even take a look at it)
+            Evaluate everything and return the first value
+    AND popierties
+        They can use any data type
+            console.log (3 && "Jonas")
+        Return any data type
+            Resultado: Jonas
+        Short-ciruiting, also called short circuit evaluation
+            If the first value is FALSE, the other will not even be evaluated(JS will not even take a look at it)
+            Evaluate everything and return the last value
+
+The nullish coalescing operator ( ?? )
+    Introduced in ES2020
+    Work with the idea with NULLISH values instead of FALSE values    
+    Nullish values
+        null
+        undefined
+        (NOT 0 or "")
+
+Looping arrays: the FOR-OF loop
+    Structure
+        for (const NAME of ITERABLE) {
+            CODING
+        }
+    Example
+        const menuFor = [...restaurant.starterMenu, ...restaurant.mainMenu];
+        for (const item of menuFor) {
+            console.log(item);              // Resultado(individually): Focaccia, Bruschetta, Garlic Bread, Caprese Salad, Pizza, Pasta, Risotto.
+        }
+        Same as before but much more simple
+        for (let i = 0; i < menuFor.length; i++) {
+            console.log(`${menuFor[i]}`);
+        }
+    Still working "Continue" and "break" keywords
+
+Enhanced object literals
+    Object oustide an object. Not necesary to repeat variable name and object
+        const Horas = { lunes: { ... }, viernes: { ... }, Dia-6: { ... }, };
+        const Restaurante = {
+            name: 'Restaurante italiano',
+            // Before ES6
+            //Horas: Horas,
+            // After ES6
+            Horas,
+        };
+    Writing methods
+        const Restaurante = {
+            // Before ES6
+            order: function (param1, param2) { console.log('Order 1'); },
+            // After ES6
+            order2(param1, param2) { console.log('Order2'); },
+        };
+    We can compute(calculate) names instead of having to write out manually and literally
+        const dias = ["lun","mar","mier","Jue","vie","sab","dom]
+        const Horas = { [dias[0]]: { ... }, [dias[4]]: { ... }, [`Dia-${2+4}`: { ... }, };
+
+Optional Chaining ( ?. )
+    If a certain property does NOT exist, then undefined is returned inmetiately
+    Structure
+        console.log(restaurant.openingHours.mon?.open);
+        If exists "mon", then show "open". But if not exists "mon", then undefined is show
+    Multiple Optional Chaining
+        console.log(restaurant.openingHours?.mon?.open);
+    Use in methods
+        console.log(restaurant.order?.(0, 1) ?? 'Method does not exist');
+    Use in arrays
+        const users = [{ name: 'Antonio', email: 'emailfalso@falso.com' }];
+        console.log(users[0]?.name);                    // Resultado: "Antonio"
+
+Looping objects: Object keys, values and entries
+    Meaning
+        Property names = keys
+        Value = values
+        Entries = keys + values on objects. On arrays, index number + element
+    Looping keys
+        for (const day of Object.keys(openingHours)) {
+            console.log(day);               // Show us the name of the propierties=keys of the key "openingHours"
+        }
+        for (const names of Object.keys(restaurant)) {
+            console.log(names);             // Show us the name of the propierties=keys of the object restaurant
+        }
+    Looping values
+        for (const value of Object.values(categories)) {
+            console.log(`Category of ${value} food`);
+        }                                   // Show only the values
+    Looping entries
+        for (const entrada of Object.entries(openingHours)) {
+            console.log(`We open at ${entrada[1].open}`);
+            console.log(entrada)
+        }                                   // Show entrada[0] = "thu"; entrada [1] = {open:12 ,close:22}
+        const entrada = Object.entries(openingHours);
+        for (const [key, { open, close }] of entrada) {
+            console.log(`On ${key} we open at ${open} and close at ${close}`);
+        }                                   // Resultado: On thu we open at 12 and close at 22
+
+Sets
+    It's a collection of unique values. NO duplicates. The order of the elements no matter
+    Not replace arrays at all
+    Main use case of sets is actually to remove duplicate values of arrays
+    Creation
+        const NAME = new Set([USUALLY AN ARRAY])
+        const ordersSet = new Set(['pasta', 'pizza', 'pizza', 'Risotto', 'pasta', 'Pizza']);
+        orders = ['pasta', 'pizza', 'pizza', 'Risotto', 'pasta', 'Pizza']
+        const ordersSet = new Set(orders);
+        console.log(ordersSet)                      // Resultado: Pasta, pizza, Risotto, Pizza      // Just only these
+    Size NOT length
+        console.log(ordersSet.size)                 // Resultado: 4
+    Check if an element is in the set
+        console.log(ordersSet.has("Pizza"));        // Resultado: true
+    Add new elements
+        ordersSet.add("Garlic Bread")
+    Delete elements. Delete ALL copies
+        ordersSet.delete("pizza")                   // Resultado: Pasta, Risotto, Pizza, Garlic Bread
+    Delete ALL elements
+        ordersSet.clear()
+    Retrieve values
+        There is NO WAY of getting values out of a set
+        But, we can transform the set into an array
+            const ordersSetArray = [...new Set(orders)]
+        And in this case we can retrieve the values without duplicates
+    Looping
+        for (const order of ordersSet) {
+            console.log(order);
+        }
+
+Maps: fundamentals
+    It is the same than the objects but in objects the keys are always strings and in maps the keys can be any type(objects, array, other maps)
+    Creation
+        const NAME = new Map()
+        const restMap = new Map()
+        The normal thing is to create it empty and later add
+    Add elements
+        restMap.set("KEY", "VAUE").set("KEY2", "VALUE2")
+        restMap.set('name', 'Classico Italiano');
+        restMap.set(1, 'Lisboa').set(2, "Portugal");
+        restMap.set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic']);
+        restMap.set(document.querySelector('h1'), 'Heading');
+    Read data
+        restMap.get(1);                 // Resultado: Lisboa
+    To know if a key exists
+        restMap.has('categories');      // Resultado: true
+    Delete elements
+        restMap.delete(2)
+    Delete ALL elements
+        restMap.clear()
+    Size
+        console.log(restMap.size);
+    Keys with arrays
+        restMap.set([5, 6], 'Test');
+        console.log(restMap.get([5, 6]));       // Resultado: undefined. Because not refered to the same place in memory
+        const arrMap = [5, 6];
+        restMap.set(arrMap, 'Test');
+        console.log(restMap.get(arrMap));       // Resultado: Test. Because arrMap refered to the same place in memory pointing the array value
+    Add elements without using set
+        const question = new Map([
+            ['question', 'What is the best programming language?'],
+            [1, 'C'],
+            [2, 'Java'],
+            [3, 'JavaScript'],
+            ['correct', 3],
+            [true, 'Correct!'],
+            [false, 'Try again!'],
+        ]);
+    It exists an easy way to convert from objects to maps
+        const MAP = new Map(Object.entries(OBJECT));
+        const hourMap = new Map(Object.entries(openingHours));
+    Convert a map into an array
+        const mapToArray = [...question];
+    Entries, keys and values work
+        question.entries()
+        question.keys()
+        question.values()
+
+Which data structure to use?
+    Sources of data
+        From the program itself: Data written directly in source code (e.g. status messages)
+        From the UI: Data input from the user or data written in DOM (e.g tasks in todo app)
+        From external sources: Data fetched for example from web API (e.g. recipe objects)
+    With all data of the sources we'll create Collection of Data.
+    This Collecions of Data has Different types of Data Structure.
+    Data Structure
+        Simple list?
+            Array
+            Set
+        Key/Value pairs? Keys allow us to describe the values
+            Object
+            Map
+    Other built-in
+        In JS: WeakMap, WeakSet
+        Not in JS : stacks, queues, linked lists, trees, hash tables
+    Differences
+        Simple list
+            Arrays
+                Use when you need ordered list of values (might contain duplicates)
+                Use when you need to manipulate data
+            Sets
+                Use when you need to work with unique values
+                Use when high-performance is really important
+                Use to remove duplicates from arrays
+        Key/Value pairs
+            Objects
+                More “traditional” key/value store (“abused” objects)
+                Easier to write and access values with . and []
+                Use when you need to include functions (methods)
+                Use when working with JSON (can convert to map)
+            Maps
+                Better performance
+                Keys can have any data type
+                Easy to iterate
+                Easy to compute size
+                Use when you simply need to map key to values
+                Use when you need keys that are not strings
+
+
+
+
+                

@@ -1403,7 +1403,67 @@ Which data structure to use?
                 Use when you simply need to map key to values
                 Use when you need keys that are not strings
 
+Working with Strings - Part 1
+    Boxing
+        When we call a method in a string, JS automatically transform the string in a object with the same content.
+        It's on that object where the methods are called.
+        new String("Jose")                  // Resultado: { 0:"J",1:"o",2:"s",3:"e",}
+    Methods very used
+            const airline = 'TAP Air Portugal';
+            const plane = 'A320';
+        Consult position
+            plane[0];                       // Resultado: A
+            'B737'[1];                      // Resultado: 7 (string)
+        Lenght
+            airline.length;                 // Resultado: 16
+            'Prueba de lenght'.length;      // Resultado: 16
+        Position of letter or word
+            airline.indexOf('r');           // Resultado: 6
+            airline.lastIndexOf('r');       // Resultado: 10
+            airline.indexOf('Portugal');    // Resultado: 8
+            airline.indexOf('portugal');    // Resultado: -1 (not found)
+        Position start and stop. Last value is not included
+            airline.slice(4);               // Resultado: Air Portugal
+            airline.slice(4, 9);            // Resultado: Air P
+            airline.slice(-4);              // Resultado: ugal
+            airline.slice(6, -1);           // Resultado: r Portuga
+            airline.slice(0, airline.indexOf(' '));         // Resultado: TAP
+            airline.slice(airline.lastIndexOf(' ') + 1);    // Resultado: Portugal
 
+Working with Strings - Part 2
+    Uppercase
+        "HOLA QUE TAL".toLowerCase()       // Resultado: tap air portugal
+    Lowercase
+        airline.toUpperCase()       // Resultado: TAP AIR PORTUGAL
+    Removes whitespace from both sides
+        const Email = '  Hello@Jose.iO \n';
+        const trimedEmail = loweEmail.trim();           // Resultado: Hello@Jose.iO
+    We can put methods one followed by another
+        const normalizedEmail = loginEmail.toLowerCase().trim();
+    Replace parts of strings
+        const priceGB = '288,97 Pounds';
+        const priceUS = priceGB.replace('Pounds', 'Dollars').replace(',', '.');         // Resultado: 288.97 Dollars
+        const announcement = 'All passengers come to boarding door 23. Boarding door 23!';
+        announcement.replace('door', 'GATE')    // Resultado: All passengers come to boarding GATE 23. Boarding door 23!
+        announcement.replaceAll('door', 'GATE') // Resultado: All passengers come to boarding GATE 23. Boarding GATE 23!
+    Return booleans
+        const plane = "Airbus A320neo"
+        plane.includes('A32')           // Resultado: true
+        plane.startsWith('Air')         // Resultado: true
+        plane.endsWith('eo')            //Resultado: true
 
+Working with Strings - Part 3
+    Separating strings
+        'A very niceD string'.split(' ')        // Resultado: ["A", "very", "niceD", "string"]
+    Uniting strings
+        const name = ['Mr.', firstName, lastName.toUpperCase()]
+        const newName = name.join(' ');         // Resultado: Mr. Jose GONZALEZ
+    Padding strings
+        Add a number of characters to the string until the string has a certain desired lenght
+        message.padStart(25, '+');              // Resultado: +++++++++++Go to gate 23!
+        message.padEnd(24, '-');                // Resultado: Go to gate 23!----------
+        const last = message.slice(-4).padStart(message.length, '*');
+    Repeat
+        message.repeat(3)                       // Resultado: Go to gate 23!Go to gate 23!Go to gate 23!
 
-                
+String methods practice

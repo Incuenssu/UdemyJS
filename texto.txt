@@ -1614,3 +1614,12 @@ Closures
 
 
 ---------------------- WORKING WITH ARRAYS ----------------------
+
+Simple array methods
+    Slice method
+        We can extract part of any array, but without changing the original array. Similar to the string.
+        arr = ['a', 'b', 'c', 'd', 'e']
+        arr.slice(1,4)                  // Resultado: ["b", "c", "d"]
+        NOT included the last
+        arr.slice(2)                    // Resultado: ["c", "d", "e"]
+

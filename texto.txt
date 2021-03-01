@@ -19,6 +19,10 @@ Cosas interesantes que saber
                 [1, "Array2"]
                 [2, "Array3"]
         Ejemplo en For-Of en tema 09
+    Timer. Tras unos milisegundos, se ejecutará una funcion
+        setTimeout(FUNCION, MILISEGUNDOS);
+        Tras 1000 milisegundos(1segundo), se ejecutará el console.log
+        setTimeout(function() {console.log('Timer')}, 1000);
 
 
 
@@ -1466,4 +1470,147 @@ Working with Strings - Part 3
     Repeat
         message.repeat(3)                       // Resultado: Go to gate 23!Go to gate 23!Go to gate 23!
 
-String methods practice
+
+---------------------- A CLOSER LOOK AT FUNCTIONS ----------------------
+
+Default parameters
+    Example
+        const createBooking = function (flightNum="0001", numPassengers = 1, price = 199 * numPassengers ) {
+            // Default value ES5:
+            flightNum = flightNum || "0001"
+            numPassengers = numPassengers || 1;
+            price = price || 199;
+        };
+    Calling functions by defaults parameters
+        createBooking()                             // Resultado: 0001, 1, 199
+        createBooking("H123", undefined, 500)       // Resultado: H123, 1, 500
+
+How passing arguments works: value vs reference
+    Primitives
+        JS copy the value, not change the original
+            let flightNum = 100
+            function (flightNum){flightNum = 3}     // Resultado: 3
+            console.log(flightNum)                  // Resultado: 100
+    References
+        JS no copy the reference, if something change, the reference will change. So all what pointing the reference will change
+            let jonas = {name:"Jonas", pass:"123"}
+            function (name){jonas.name = "Pedro"}     // Resultado: Pedro
+            console.log(jonas)                  // Resultado: Pedro
+    JS does NOT have passing by reference, ONLY passing by value
+
+First-Class and higher-Order Functions
+    First-class functions
+        JS trats functions as first-class citizen, this means that functions are simply values
+        Functions are just another "type" of object
+        Store functions in variables or propierties
+            const add = (a,b) => a + b                                      // (a,b) => a + b
+            const counter = {value: 23, inc: function(){this.value++}}      // function(){ this.value++ }
+        Pass functions as arguments to OTHER functions
+            btnClose.addEventListener("click", add )                        // add
+        Return functions FROM functions
+        Call methods on functions
+            counter.inc.bind(someOtherObject)                               // "bind()"
+    Higher-order functions
+        A function that receives another function as an argument, that returns a new function, or both
+        This is only possible because of first-class functions
+        Function that receives another function
+            btnClose.addEventListener("click", add )                        // addEventListener (High-Order); add (Callback function)
+        Function that returns new function
+            function count(){                                               // count (High-Order)
+                let counter = 0
+                return function () { counter ++}                            // function() (returned function)
+            }
+    There are NO first class functions in practice, it's just a concept.
+    There are higher order functions in practice, wich are posible because JS supports first class functions
+    Abstraction
+        We hide the detail of some code implementation because we don't really care about all that detail
+
+The call and apply methods
+    Example
+        const lufthansa = {
+            book(flightNum, name) {
+                console.log( `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+        );},};
+        const book = lufthansa.book;
+        const eurowing = {
+            airline: 'Eurowings',
+            iataCode: 'EW',
+            bookings: [],
+        };
+        book(23, 'Pepito'); // Resultado: Error. Because "this keyword NOT point to nothing --> undefined"
+    We need to say JS explicity what the "this keyword" should be with
+    Call
+        NAME.call(THISKEYWORD, OTHERPARAMETERS)
+        book.call(eurowing, 23, 'Sarah');               // Resultado: Sarah booked a seat on Eurowings flight EW23
+        book.call(lufthansa, 213, 'Cooper');
+        Is necesary that the propierties HAVE the same name because "this keyword" look there "this.iataCode"
+    Apply.
+        It is the same than call, but use an array in parameters
+        NAME.apply(THISKEYWORD, [OTHERPARAMETERS])
+        book.apply(lufthansa, [968, 'Pepito']);
+        const flightData = [854, 'John Cooper'];
+        book.apply(lufthansa, flightData);                  // Resultado: John Cooper booked a seat on Lufthansa flight LH854
+        NOT USED in modern JS, CALL method is the same:
+            book.call(lufthansa, ...flightData);            // Resultado: John Cooper booked a seat on Lufthansa flight LH854
+    Bind
+        Studied in detail in next section
+
+The bind method
+    Manually sets the "this keyword" for any function call
+    Bind does NOT immediately call the function, instead it returns a new function where the "this keyword" is bound. So it's set to whatever value we pass into bind
+    Structure
+        book.bind(eurowing)         // This NOT call the function, returns a new function so we can save in a variable
+        const bookEW = book.bind(eurowing);
+    Calling the bind method
+        bookEW(125, 'Steven');      // Resultado: Steven booked a seat on Eurowings flight EW125
+    It is possible to use a default parameter when use bind method
+        const bookEW23 = book.bind(eurowing, 23)        // The first parameter is 23 and we use this method, allways will be 23
+        bookEW23('Pedrito');        // Resultado: Pedrito booked a seat on Eurowings flight EW23
+    Using with event listeners
+        .querySelector('.buy').addEventListener('click', lufthansa.buyPlane.bind(lufthansa))      // We force to point to lufthansa object. Not to the class "buy"
+        .querySelector('.buy').addEventListener('click', lufthansa.buyPlane))      // NOT working because "this keyword" is pointing to "buy" class
+    Partial application
+        When we are not interested in "this keyword" but we still use bind method for something like default parameters
+            const addTax = (rate, value) => value + value * rate;
+            console.log(addTax(0.1, 200));
+            const addTaxIVA = addTax.bind(null, 0.21); // const addTaxIVA = value => value + value * 0.21;
+            console.log(addTaxIVA(100));
+        We can use default parameters but this here is creating a brand new simply more specific function based on a more general function.
+        It permit to create a much more default parameters
+            const IVAGeneral = addTax.bind(null, 0.21);
+            const IVAReducido = addTax.bind(null, 0.1);
+            const IVASuperReducido = addTax.bind(null, 0.04);
+
+Immediately invoked function expressions ( IIFE )
+    If we want to use one function once and never more we can do it
+        ( function(){console.log('This will never run again')} ) ();
+        const runNotOnce=function(){console.log('This function will run again')};
+    Arrow functions IIFE
+        ( ()=>console.log('This will ALSO never run again') ) ();
+    In modern JS, IIFE are NOT that used anymore to maintain private variables
+        Because if all we want is to create a new scope for data privacy. All we need to do is to just create a block like
+            {
+                const isPrivate = 25;
+                var notPrivate = 35;
+            }
+        There's no need to creating a function to create a new scope. Unless we use var
+    In modern JS, if you need to execute a function just once, then the IIFE is still the way to go
+
+Closures
+    Is not a feature that we explicitly use. SO, we don't create closures.
+    Closures just simply happen automatically in certain situations. We need recognice those situations.
+    Any function always has access to the variable environment of the execution context in which the function was created.
+        Even after a debt execution context is gone.
+    Closure: variable environment attached to the function, exactly as it was at the time and place the function was created.
+ -> A closure is like a backpack that a function carries around wherever it goes.
+        This backpack has all the variables that were present in the environment where the function was created.
+            Person      ---->   Function
+            Backpack    ---->   Closure
+            Books       ---->   Variables
+    We do NOT have to manually create closures, this is a JavaScript feature that happens automatically
+        We can’t even access closed-over variables explicitly. A closure is NOT a tangible JavaScript object.
+    To see the closure
+        console.dir(FUCTION)    ==>     [[Scopes]]  ==>     0: Closure
+
+
+---------------------- WORKING WITH ARRAYS ----------------------

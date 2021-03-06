@@ -23,6 +23,20 @@ Cosas interesantes que saber
         setTimeout(FUNCION, MILISEGUNDOS);
         Tras 1000 milisegundos(1segundo), se ejecutará el console.log
         setTimeout(function() {console.log('Timer')}, 1000);
+    When create a event listenin in a button, the web recharge, to prevent it:
+        function(e){ e.preventDefault(); }
+    Para modificar propiedades del CSS desde JS
+        document.querySelector(" . # ").style.PROPIEDAD = VALOR
+        document.querySelector(".textoPrincipal").style.opacity = 100
+    Para zonas de texto usamos TEXTCONTENT
+        document.querySelector(" . # ").textContent = "Texto nuevo"
+    Para zonas donde el usuario puede escribir usamos VALUE
+        document.querySelector(" . # ").value = "texto escrito"
+    ++ incrementa el valor en 1 pero sigue devolviendo el valor previo si se pone detras, si se pone delante funciona correctamente
+        let a = 10
+        console.log(a++)                // Resultado: 10
+            console.log(a)              // Resultado: 11
+        console.log(++a)                // Resultado: 11
 
 
 
@@ -162,7 +176,6 @@ The Conditional/Ternary Operator
     Pero como el Conditional es una expresion podemos aprovecharnos de ello
         console.log(`I ${const drive = age >= 18 ? "can" : "can't"} drive.`)
     
-
 
 ---------------------- FUNDAMENTOS JS PARTE 2 ----------------------
 
@@ -416,7 +429,6 @@ The WHILE loop
             rep++
         }
     WHILE loop is more versatile than FOR loop
-
 
 
 ---------------------- DEVELOPER SKILLS AND EDITOR SETUP ----------------------
@@ -1622,4 +1634,291 @@ Simple array methods
         arr.slice(1,4)                  // Resultado: ["b", "c", "d"]
         NOT included the last
         arr.slice(2)                    // Resultado: ["c", "d", "e"]
+        arr.slice(-2)                   // Resultado: ["d", "e"]
+        We can create a shadow copy
+        const arrCopy = arr.slice()     // Resultado: ['a', 'b', 'c', 'd', 'e']
+        const arrCopy = [...arr]        // Resultado: ['a', 'b', 'c', 'd', 'e']
+    Splice method
+        It is similar than Slice but Splice YES change the original array
+            const arrSlice = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+            arrSlice                    // Resultado: ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+            arrSlice.splice(2, 4))      // Resultado: ["c", "d", "e", "f"]
+            arrSlice                    // Resultado: ["a", "b", "g"]
+        In this case, the second value is included
+            splice(2,4) Included the values 2,3 and 4
+            slice(2,4)  Included the values 2 and 3
+    Reverse method
+        This method turns it around the values
+            const arrReverse = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+            arrReverse.reverse()        // Resultado: ["g", "f", "e", "d", "c", "b", "a"]
+        Change the original value
+            arrReverse                  // Resultado: ["g", "f", "e", "d", "c", "b", "a"]
+    Concat method
+        Use to concatenate two arrays
+            const arrConcat = arr.concat(arrReverse);       // Resultado: ["a", "b", "c", "d", "e", "g", "f", "e", "d", "c", "b", "a"]
+    Join method
+        Unite the values in the array with a definive separation
+            arr.join(' - ')             // Resultado: a - b - c - d - e
+            arr.join(';')               // Resultado: a;b;c;d;e
+            arr.join(' / next:')        // Resultado: a / next:b / next:c / next:d / next:e
+    And much more
+
+Looping arrays: forEach
+    Same functioning than FOR-OF loop
+    Structure
+        ARRAY.forEach( function(element){} )
+    Destructuring
+        FOR-OF Loop
+            for (const [i, movement] of movements2.entries()) {
+                if (movement > 0) {
+                    console.log(`Movement ${i + 1}: You deposited ${movement}`);
+                } else {
+                    console.log(`Movement ${i + 1}: You withdrew ${Math.abs(movement)}`);
+                }
+            }
+        forEach
+            movements2.forEach(function (movement, index, array) {          // ( CurrentElement, CurrentIndex, EntireArray )
+                if (movement > 0) {
+                    console.log(`Movement ${i + 1}: You deposited ${movement}`);
+                } else {
+                    console.log(`Movement ${i + 1}: You withdrew ${Math.abs(movement)}`);
+                }
+            });
+    Using
+        Is better using always forEach, instead:
+        It not possible to break or continue the forEach method
+    Maps
+        MAP.forEach(function(VALUE, KEY, map) {})
+    Sets
+        SET.forEach(function(VALUE, KEY, set) {})
+        In sets KEY = VALUE because sets does NOT have keys or indexes. For this, in real live use:
+        SET.forEach(function(VALUE, _, set) {})
+        Where "_" means a throwaway variable
+
+Creating DOM elements
+    Insert code in the HTML
+        document.querySelector('').insertAdjacentHTML(POSITIONtoATTACHinHTML, TEXT)
+            Position to attach in HTML
+                'beforebegin': Before current element. Out of the element.
+                'afterend': After current element. Out of the element.
+                'afterbegin': Inside current element, after his first child element
+                    array = [1, 2, 3, 4]
+                    Order added: 4, 3, 2, 1
+                'beforeend': Inside current element, before his last child element
+                    Order added: 1, 2, 3, 4
+        document.querySelector('.main').insertAdjacentHTML(afterbegin, "Prueba")
+
+Data transformations: map, filter, reduce
+    Big array methods used all the time to perform data transformations. Create new arrays.
+        [3, 1, 4, 3, 2]
+    Map method
+        Returns a new array containing the results of applying an operation on all original array elements.
+        MAP ----> current * 2 ----> [6, 2, 8, 6, 2]
+        Better than forEach method
+    Filter method
+        Returns a new array containing the array elements that passed a specified test condition.
+        FILTER  ----> current > 2 ----> [3, 4, 3]
+    Reduce method
+        Boils(“reduces”) all array elements down to one single value (e.g. adding all elements together)
+        Reduce ----> accumulator + current  ----> [13]
+
+The Map method
+    Structure
+        const NEWARRAY = ARRAY.map ( function((VALUE, INDEX, ARRAY)){ return OPERATION } )
+        const movementsUSD = movements.map(function (mov) { return mov * eurToUSD; });
+    We obtain the same results using FOR-OF loop but in modern JS is better to use map method
+ -> Better using Arrow functions
+    The princial diferente between Map Method and forEach method is:
+        Map create a new array
+        forEach not create a new array, just do things same as a loop
+
+The Filter method
+    Structure
+        const NEWARRAY = ARRAY.filter ( (VALUE, INDEX, ARRAY) => OPERATION )
+        const deposits = movements.filter(mov => mov > 0);
+    We obtain the same results using FOR-OF loop but in modern JS is better to use filter method
+ -> Better using Arrow functions
+
+The Reduce method ( VERY IMPORTANT )
+    Structure
+        const NEWARRAY = ARRAY.reduce ( ((ACUMULATOR, VALUE, INDEX, ARRAY) => OPERATION), INITIALVALUEACCUM )
+            ACUMULATOR
+                Like a snowball that keeps accumulating the value that we ultimately want to return
+        const balance = movements.reduce((acc, curr) => acc + curr, 0);
+    Good use of array parameter: average
+        const balance = movements.reduce( (acc, curr, i, arr) => acc + curr/arr.lenght, 0);
+        ( 2+3 ) /2 == 2/2 + 3/2
+
+The magic of chaining methods
+    Pipeline
+        It is posible to concatenate all the previous data transformations 
+        const totalDepositsUSD = movements
+            .filter(mov => mov > 0)
+            .map(mov => mov * eurToUSD)
+            .reduce((acc, mov) => acc + mov, 0);
+    If we need to debugg we can use the console and the parameter array
+        const totalDepositsUSD = movements
+            .filter(mov => mov < 0)
+            .map((mov, i, arr) => {
+                console.log(arr); // Here we can see the bug: negative values
+                return mov * eurToUSD;
+            })
+            .reduce((acc, mov) => acc + mov, 0);
+    Chaining
+        We should NOT overuse chaining. If use a lot of methods one below other, that will have problems.
+        Think well what use, because two map methods can be translate into only one map method.
+        NOT chain methods that mutate the original array
+
+The find Method
+    Retrieve ONE ELEMENT of an array based on a condition
+    Structure
+        const FIRSTELEMENT = ARRAY.find ( (VALUE, INDEX, ARRAY) => OPERATION )
+        const encontrar = movements.find(mov => mov < 0);
+    Differences between FIND and FILTER
+        Find method stop when the first element fulfill the condition, while filter travel around all the array.
+        Find method return ONE element and NOT an array. Filter method return an array
+
+The findIndex Method
+    Works as same as find method, but findIndex returns the index of the found element
+    Structure
+        const FIRSTINDEX = ARRAY.findIndex ( (VALUE, INDEX, ARRAY) => OPERATION )
+        const encontrarIndex = movements.findIndex(mov => mov < 0);
+    Work very good with "splice method", because we find the index and later we can delete it
+
+Some and Every Method
+    Some method
+        Structure
+            const BOOLEAN = ARRAY.some ( (VALUE, INDEX, ARRAY) => OPERATION )
+            movements.some(mov => mov > 0)
+        Similar to "includes"(Also bring back a boolean) but this method can't admit functions, only equality and "Some Method" admit functions, or conditions
+            movements.includes(-130)
+            movements.some( mov => mov == -130)
+    Every method
+        Structure
+            const BOOLEAN = ARRAY.every ( (VALUE, INDEX, ARRAY) => OPERATION )
+            movements.some(mov => mov < 5000)
+        Similar to some, instead of only returns true if ALL elements satisfy the condition
+
+Flat and FlatMap Method
+    Flat
+        It is used when we haven an array of arrays and whe want only one array without arrays inside
+         Normally we use "Map method" and later "Flat method"
+        Structure
+            ARRAY.flat()
+        Example 1
+            const arrFlat = [ [1, 2, 3] , [4, 5, 6] , 7, 8];
+            arrFlat.flat()                                      // Resutado: [1, 2, 3, 4, 5, 6, 7, 8]
+        Example 2
+            const arrFlatDeep = [ [ [1, 2] , 3] , [4, [5, 6] ] , 7, 8];
+            arrFlatDeep.flat()                                  // Resutado: [Array(2), 3, 4, Array(2), 7, 8]
+            arrFlatDeep.flat(1)                                 // Resutado: [Array(2), 3, 4, Array(2), 7, 8]
+            arrFlatDeep.flat(2)                                 //Resultado: [1, 2, 3, 4, 5, 6, 7, 8]
+            arrFlatDeep.flat(5)                                 //Resultado: [1, 2, 3, 4, 5, 6, 7, 8]
+    FlatMap
+        Introduced in ES2019
+        Flatmap combine "Map Method" and "Flat Method".
+        Only go 1 level deep, and CANNOT be changed
+        Structure
+            ARRAY.flatMap( (VALUE, INDEX, ARRAY) => OPERATION )
+        Example
+            const allMovements = accounts.map(acc => acc.movements).flat()
+            const allMovements = accounts.flatMap(acc => acc.movements)
+   
+Sorting arrays
+    Is a much-discussed topic in computer science and there are countless algorithms and methods of sorting values.
+    For the moment we are going to use JS's built-in sort method
+    Structure
+        Array.sort(CURRENTVALUE , NEXTVALUE)
+    This method MUTATE the original array
+    Example:
+        const owners = ['Jonas', 'Sarah', 'Adam', 'Martha'];
+        console.log(owners.sort());                     // Resultado: ["Adam", "Jonas", "Martha", "Sarah"]
+        console.log(owners);                            // Resultado: ["Adam", "Jonas", "Martha", "Sarah"]
+    Strings
+        A to Z
+    Numbers
+        NOT work. The method convert all to strings and try to sort it.
+        It is possible fix it with a callback function.
+        Logic:
+            If function returns < 0 ===> a, b (Keep order)
+            If function returns > 0 ===> b, a (Switch order)
+            Ascending
+            movements.sort((a, b) => a - b );
+            Descending
+            movements.sort((a, b) => b - a );
+    Mixed strings and numbers
+        NOT work at all
+
+More ways of creating and filling arrays
+    How to programmatically create and fill arrays
+    Method 1: Empty + fill method
+        Filling
+            Structure
+                Array.fill( VALUE, INITIAL, FINAL(notIncluded) )
+            Mutate the original
+        Example:
+            const x = new Array(3);                 // Resultado: (3) [empty × 3] == [ , , ]
+            x.fill(5)                               // Resultado: [5, 5, 5]
+    Method 2: Array.form()  
+        Structure
+            Array.from({ length: NUMBER }, ( , VALUE) => OPERATION )
+        Example
+            Array.from({ length: 7 }, () => 1)                  // Resultado: [1, 1, 1, 1, 1, 1, 1]
+            Array.from({ length: 7 }, ( _ , i) => i + 1)          // Resultado: [1, 2, 3, 4, 5, 6, 7]
+    Method 3: QuerySelectorAll
+        QuerySelectorAll returns a NodeList, wich is something like an array which contains all the selected elements. 
+        So, it is necesary to convert it into an array
+
+Which array method to use?
+    To mutate original array
+        Add to original
+            .push       (end)
+            .unshift    (start)
+        Remove from original
+            .pop        (end)
+            .shift      (start)
+            .splice     (any)
+        Others
+            .reverse
+            .sort
+            .fill
+    A new array
+        Computed from original
+            .map        (loop)
+        Filtered using condition
+            .filter
+        Portion of original
+            .slice
+        Adding original to other
+            .concat
+        Flattening the original 
+            .flat
+            .flatMap
+    An array index
+        Based on value
+            .indexOf
+        Based on test condition
+            .findIndex
+    Retrieve an array element
+        Based on test condition
+            .find
+    Know if array includes a certain element
+        Based on value
+            .includes
+        Based on test condition
+            .some
+            .every
+    A new string
+        Based on separator string
+            .join
+    To transform to value
+        Based on accumulator
+            .reduce         (Boil down array to single value of any type: number, string, boolean, or even new array or object)
+    To loop over an array
+        Based on callback
+            .forEach        (Does not create a new array, just loops over it)
+
+
+---------------------- NUMBERS, DATES, TIMERS AND BANKLIST ----------------------
+
 

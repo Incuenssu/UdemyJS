@@ -1921,4 +1921,245 @@ Which array method to use?
 
 ---------------------- NUMBERS, DATES, TIMERS AND BANKLIST ----------------------
 
+Converting and checking numbers
+    All numbers in JS are decimals.
+        console.log(23 === 23.0);                           // Resultado: true
+        Are represented internally based in a 64 base 2 format.
+            Numbers are always stored in a binary format.
+                Base 10 => 0 to 9
+                Base 2 => 0 1
+            In this system ys very complicated to represent fractions. For example: 0.1
+                Base 10
+                    Represent 1/10 is easy = 0.1
+                    Represent 3/10 is imposible = 3.3333333333...
+                Base 2
+                    Represent 1/10 is imposible
+        JS is very BAD for scientifics
+            0.1 + 0.2 === 0.3                   // Resultado: false
+    Convert string into number manually
+        Number( "23" )
+        + "23"
+    Type coertion
+        convert string into number automatically
+        "23" === 23
+    Parsing
+        Number has methods to help us to analize. Is necessary than the string start with a number ("e23" not allowed)
+            Number.parseInt("23px")
+            Number.parseFloat("2.5rem")
+        Parse accept other argument called "Regex". Is the base of the numeral system that we are using
+            Number.parseInt("23px", 10 )
+        In old JS it's been using parsing without "Number." but in modern JS is better to use it.
+            Old JS:         parseFloat("2.5rem")
+            Modern JS:      Number.parseFloat("2.5rem")
+    isNaN
+        Used to check if any value is a number. Boolean
+            Number.isNaN('23')                          // Resultado: false
+            Number.isNaN('23a')                         // Resultado: false
+            Number.isNaN(+'23')                         // Resultado: true
+            Number.isNaN(23 / 0)                        // Resultado: false
+    Is Finite
+        Used to check if any value is finite. Boolean
+        Better method to know if a value is a number
+            Number.isFinite(23)                         // Resultado: true
+            Number.isFinite(23 / 0)                     // Resultado: false
+            Number.isFinite("23")                       // Resultado: false
+            Number.isFinite(+"23X")                     // Resultado: false
+            Number.isFinite("23")                       // Resultado: true
+
+Math and rounding
+    Square Root
+        Math.sqrt(25)                       // Resultado: 5
+        25 ** (1 / 2)                       // Resultado: 5
+        8 ** (1 / 3)                        // Resultado: 2
+    Maximum and minimum
+        Math.max(5,18,25,1,"150")           // Resultado: 150
+        Math.min(5,18,25,1,"150")           // Resultado: 1
+    Pi
+        Math.PI
+    Random
+        Number between 0 and 1
+        Math.random()
+    Rounding
+        Trunc eliminate the decimal part
+        Round method round to the nearest integer
+            Math.round(23.3)                // Resultado: 23
+            Math.round(23.9)                // Resultado: 24
+        Ceil method round up the integer
+            Math.ceil(23.3)                 // Resultado: 24
+            Math.ceil(23.9)                 // Resultado: 24
+        Floor method round down the integer
+            Math.floor(23.3)                // Resultado: 23
+            Math.floor(23.9)                // Resultado: 23
+        ALl of these works with type coertion
+        Trunc and Floor works equal with positive number, but different with negative numbers
+        Trunc and Ceil works equal with negative number, but different with positive numbers
+    toFixed
+        Used to adjust the number of decimals. Rounding the value
+        Transforms the value into a String
+            (2.227).toFixed(2)              // Resultado: 2.23 (string)
+        We can transform again into a number
+            +(2.227).toFixed(2)              // Resultado: 2.23 (float)
+    As wee saw in the past, primitives has NOT methods but we use methods.
+        It is possible because JS transform the primitives into boxes, aplly the method and later transform again into a primitive
+
+The remainder operator
+    Returns the remainder of a division into integers
+        21 % 6                                  // Resultado: 3
+        21 / 6                                  // Resultado: 3.5   ===> 21 = 6 * 3 + 3
+    Even or odd number
+        One number is even when is divisible by 2 and the remainder is 0
+        21 % 2                                  // Resultado: 1     ====> Odd
+        20 % 2                                  // Resultado: 0     ====> Even
+    If we want to do something ever "NTH" time is a good idea to use the reminder operator
+        Every third time
+            if (i % 3 === 0){}
+        Every fifth time
+            if (i % 5 === 0){}
+        Every eleventh time
+            if (i % 11 === 0){}
+        
+Working with BigInt
+    Introduced in ES2020
+    Numbers are represented in 64 bits in JS = 64 ones or zeros
+        From these 64 bits, 53 are used to store the digits themselves, the rest store the position of the decimal point and the sign
+    Numbers bigget than (2^53 - 1) is not safe, what means it cannot be represented accurately
+    A new primitive was added called BigInt.
+    It can be used to store numbers as large as we want
+    To transform into a big int it is necessary to add a "n" or with the method(not safe)
+        1234254367866554323456765432134356              Normal Int. Not safe
+        1234254367866554323456765432134356n             Bit Int. Safe
+        BigInt(1234254367866554323456765432134356)      Bit Int. Not safe.
+    Operations
+        Works equal but only with BigInts
+            1000n + 1000n                               // Resultado: 2000n
+            1000n + 1000                                // Resultado: Error: cannot mix BigInt and other types
+            10n / 3n                                    // Resultado: 3 ====> Returns the closest BigInt (remember the differente between 64 and 53 bits)
+        The comparison still works mixing normal and big ints
+            20n < 50            // Resultado: true
+            20n == 20           // Resultado: true
+            20n === 20          // Resultado: false ====> Not type coertion (different primitive type)
+        The Math method for the moment is not working
+            Math.sqrt(8n)       // Resultado: Error
+
+Creating dates
+    Form 1
+        const date1 = new Date();               // Resultado: Sun Mar 07 2021 12:57:13 GMT+0100 (Central European Standard Time)
+    Form 2
+        new Date('Mar 12 2022 19:59:20')        // Resultado: Sat Mar 12 2022 19:59:20 GMT+0100 (Central European Standard Time)
+    Form 3
+        new Date(2037, 10, 19, 15, 23, 5));     // Resultado: Thu Nov 19 2037 15:23:05 GMT+0100 (Central European Standard Time)
+        Year, month(Fanuary is month 0), day, hour, minute, second
+    Form 4
+        new Date(0)
+        Unix time: 0 milliseconds after that initial Unix time
+        new Date(3 * 24 * 60 * 60 * 1000)       // Resultado: Sun Jan 04 1970 01:00:00 GMT+0100 (Central European Standard Time)
+    --> timestamp: (3 * 24 * 60 * 60 * 1000) = 259200000 this number is the "timestamp" of the day number three
+    Timestamp
+        We can obtain the date with the milliseconds passes since January 1, 1970
+        new Date (2142253380000)                // Resultado: Thu Nov 19 2037 15:23:05 GMT+0100 (Central European Standard Time)
+    Working with dates
+        Example
+            const future = new Date(2037, 10, 19, 15, 23);
+        Get year
+            future.getFullYear()                // Resultado: 2037
+        Get month
+            Start in month 0: January
+            future.getMonth()                   // Resultado: 10 ==> Month number 11: November
+        Get day
+            future.getDate()                    // Resultado: 19
+        Get day of the week
+            Start in day 0: Sunday
+            future.getDay()                     // Resultado: 4 ==> Day number 4: thursday
+        Get hours, minutes and seconds
+            future.getHours()                   // Resultado: 15
+            future.getMinutes()                 // Resultado: 23
+            future.getSeconds()                 // Resultado: 0
+        Get the ISO string
+            International Standard
+            future.toISOString()                // Resultado: 2037-11-19T14:23:00.000Z
+        Get timestamp
+            future.getTime()                    // Resultado: 2142253380000
+            Date.now()      // Obtain the timestamp until now
+    Changing values
+        Set Year
+            future.setFullYear()                // Resultado: 2100
+        Exists sets for all previous values
+
+Operations with dates
+    We convert to timestamp to realice operations
+        +future                 // Resultado: 4130317380000
+    Example
+        const calcDaysPassed = (date1, date2) => Math.abs((date2 - date1) / (1000 * 60 * 60 * 24));
+        calcDaysPassed(new Date(2037, 3, 14), new Date(2037, 3, 4));            // Resultado: 10
+
+Internationalizing dates (IntL)
+    JS has an API to transform dates depending the country
+        day/month/year      ====>       month/day/year
+    Creation
+        new IntL.DateTimeFormat('LOCALS').format(DATE)
+        new Intl.DateTimeFormat('en-US').format(new Date())             // Resultado: 07/03/2021
+    Code locals table
+        http://www.lingoes.net/en/translator/langcode.htm
+    We can modify the INTL with differents propierties
+        const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            day: 'numeric',
+            month: 'long',
+            year: '2-digit',
+            weekday: "long",
+        };
+        new Intl.DateTimeFormat('en-US', options).format(new Date())        // Resultado: Sunday, 7 March 21, 18:15
+        new Intl.DateTimeFormat('es-ES', options).format(new Date())        // Resultado: domingo, 7 de marzo de 21, 18:15
+    It is better adjust the internationalizing automatically
+        const locale = navigator.language;                                  // Resultado: "en" or "es-ES" or whatever
+        new Intl.DateTimeFormat(locale, options).format(new Date())
+
+Internationalizing Numbers (IntL)
+    Similar than dates
+        new IntL.DateTimeFormat('LOCALS').format(NUMBER)
+        new Intl.NumberFormat('es-ES').format(345654.45)                    // Resultado: 345.654,45
+        new Intl.NumberFormat('us-GB').format(345654.45)                    // Resultado: 345,654.45
+    It is posible change it with options
+        const numberoptions = {
+            style: 'unit',
+            unit: 'mile-per-hour',
+            // unit: "celsius",
+
+            style: "percent"
+
+            style: "currency"
+            currency: "EUR",        Not affected by the local. It is necessary adjust manually
+            useGrouping: false,     Without separator ( 3.500 = 3500)
+        };
+        new Intl.NumberFormat('es-ES', numberoptions).format(345654.45)                    // Resultado: 345.654,45 mi/h
+        new Intl.NumberFormat('us-GB', numberoptions).format(345654.45)                    // Resultado: 345,654.45 mph
+
+Timers: setTimeout and setInterval
+    setTimeout
+        Runs just once after a defined time
+        We can use it to execute code at some point in the future
+        Structure
+            setTimeout(FUNCTION , MILLISECONDS, PARAMETERS);
+            setTimeout( ()=>console.log('Here is your pizza') , 3000);
+        The code no stops in the setTimeout, JS continue while setTimeout is background
+        Example with parameters
+            setTimeout( (ing1, ing2) => console.log('Here is your pizza'), 5000, 'olives', 'spinach');
+        We can cancel the timer until the delay has actually passed
+            if ( SOMETHING ) clearTimeout( TIMERNAME );
+    setInterval
+        Keeps running forever, until we stop it.
+        Used when we want to do something every 10 seconds/minutes/hours
+        Structure
+            setInterval(FUNCTION , MILLISECONDS, PARAMETERS);
+        Example
+            setInterval(function () {
+                const now = new Date();
+                const hour = now.getHours();
+                const minute = now.getMinutes();
+                const second = now.getSeconds();
+                console.log(`${hour}:${minute}:${second}`);
+            }, 1000);
+        We can cancel the timer
+            if ( SOMETHING ) clearInterval( TIMERNAME );
 

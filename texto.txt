@@ -31,12 +31,80 @@ Cosas interesantes que saber
     Para zonas de texto usamos TEXTCONTENT
         document.querySelector(" . # ").textContent = "Texto nuevo"
     Para zonas donde el usuario puede escribir usamos VALUE
-        document.querySelector(" . # ").value = "texto escrito"
-    ++ incrementa el valor en 1 pero sigue devolviendo el valor previo si se pone detras, si se pone delante funciona correctamente
-        let a = 10
-        console.log(a++)                // Resultado: 10
-            console.log(a)              // Resultado: 11
-        console.log(++a)                // Resultado: 11
+            document.querySelector(" . # ").value = "texto escrito"
+        ++ incrementa el valor en 1 pero sigue devolviendo el valor previo si se pone detras, si se pone delante funciona correctamente
+            let a = 10
+            console.log(a++)                // Resultado: 10
+                console.log(a)              // Resultado: 11
+            console.log(++a)                // Resultado: 11
+        Es mejor usar un link en vez de un boton para llamar a un modal, asi ira hacia donde queramos: top page, botton page, etc. Y asi evitamos problemas.
+            <a class="nav__link nav__link--btn btn--show-modal" href="#"> Open account </a>
+        getComputedStyle
+            Para saber las propiedades del elemento incluso en el archivo css
+        ":root{}" es el equivalente en CSS a "document." en JS
+    Color random
+        const randomInt = (min, max) =>
+            Math.floor(Math.random() * (max - min + 1) + min);
+        const randomColor = () =>
+            `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+        randomColor(0,255)
+    Ver que ocasiona un evento: addEventListener("click", function(e){
+        console.log( e.target ) })
+    Para llevar a una seccion cuando se clicka un boton
+        <a href="#section1"> Navegacion </a>        // id="section1"
+    Barra de navegacion suave
+        document.querySelector(PARENT).addEventListener('click', function (e) {
+            e.preventDefault();
+            const clicked = e.target.classList.contains(CHILD);
+            if (!clicked) return;
+            document
+                .querySelector(e.target.getAttribute('href'))
+                .scrollIntoView({ behavior: 'smooth' });
+        });
+    querySelector busca hijos no importa lo profundos que esten
+    closest busca padres no importa lo profundos que esten
+    Hover
+        El opuesto a mouseenter is mouseleave
+        El opuesto a mouseover is mouseout
+    Funcion para hacer semitransparente el resto de botones de navegacion cuando Hover. (Passing arguments to event handlers)
+        const nav = document.querySelector('.nav');
+        const handleHover = function (e) {
+            if (e.target.classList.contains('nav__link')) {
+                const link = e.target;
+                const siblings = link.closest('nav').querySelectorAll('.nav__link');
+                const logo = link.closest('.nav').querySelector('img');
+                siblings.forEach(el => {
+                    if (el !== link) el.style.opacity = this;
+                    logo.style.opacity = this;
+                });
+            }
+        };
+        nav.addEventListener('mouseover', handleHover.bind(0.5));
+        nav.addEventListener('mouseout', handleHover.bind(1));
+    Sticky navigation barra En el CSS le aplicamos el estilo
+        .nav.sticky {
+            position: fixed;
+        }
+    Para hacer aparecer y desaperecer cosas cuando pasan por un determinado punto
+        Creacion
+            const observer = new IntersectionObserver(observerCallBack, observerOptions);
+            const navHeight = qs(".nav").getBoundingClientRect().height;
+        Funcion
+            const observerCallBack = function (entries) {
+                const [entry] = entries;
+                if (!entry.isIntersecting) qs(".navbar").classList.add('sticky');
+                else qs(".navbar").classList.remove('sticky');
+            };
+        Opciones
+            const observerOptions = {
+                root: null,
+                threshold: 0,
+                rootMargin: `-${navHeight}px`,
+            };
+        Llamando al observador
+            observer.observe(qs('.header'));
+
+
 
 
 
@@ -374,7 +442,7 @@ Objects methods
                 return this.age
             }
         }
-    --> Be carefull, it is necesarry first call the method and later we can call the return
+    --> Be carefull, it is necesary first call the method and later we can call the return
         console.log(`The age of Jonas is ${jonas.age}`)             Resultado: The age of Jonas is Undefined
         jonas.calcAge()
         console.log(`The age of Jonas is ${jonas.age}`)             Resultado: The age of Jonas is 29
@@ -2162,4 +2230,530 @@ Timers: setTimeout and setInterval
             }, 1000);
         We can cancel the timer
             if ( SOMETHING ) clearInterval( TIMERNAME );
+
+
+---------------------- ADVANCED DOM AND EVENTS ----------------------
+
+How the DOM really works
+    Initial
+        DOM: Document Object Model
+        The DOM is the interface between all JS code and the browser, or more specifically HTML documents that are rendered in and by the browser
+            JS  <---->  DOM (interface) <---->  Browser
+    Definition
+        DOM allows us to make JavaScript interact with the browser.
+        We can write JavaScript to create/modify/delete HTML elements, set styles, classes and attributes, and listen/respond to events
+        DOM tree is generated from an HTML document, which we can then interact with
+        DOM is a very complex API(application program interface) that contains lots of methods and properties to interact with the DOM tree
+            .querySelector()
+            .addEventListener()
+            .createElement()
+            etc
+    Organization
+        Every single note in the DOM tree is of the type: node.
+        Each node is represented in JS by an object. Which has access to different methods: textcontent, childnodes, etc
+        Types of nodes
+            Element
+                <p></p>
+                This type gives each HTML access to a ton of useful properties like: .innerHTML ; .classList ; etc
+                This type has internally an HTML element, child type: HTMLElement
+                    This HTMLElement itself has exactly one child type for each HTML element that exists in HTML
+                        HTMLButtonElement ; HTMLDivElement ; etc
+                        This differents child nodes has different methods: href ; etc
+            Text
+                Inside the Element ==> <p> Text </p>
+                This is his own new node, separate from the Element node
+            Comment
+                <!-- -->
+            Document
+                .querySelector ; .createElement() ; etc
+        Inheritance(herencia) of methods and properties
+            Inheritance makes all work
+            Inheritance means that all the child types will also get access to the methods and properties of all their parent node types
+    Window Node
+        Global object
+        Lots of methods and properties
+        Many unrelated to DOM
+    EventTarget
+        Way of the DOM of allowing all the node types to listen to events
+            .addEventListener() ; .removeEventListener()
+        Father of both the node type and also the window node type
+    --> We DO NEVER CREATE an EventTarget object
+    Scheme
+        Event Target    ====> Window
+                        ====> Node      ====> Element   ====> HTML Element  ====> HTMLButtonElement
+                                        ====> Text                          ====> HTMLDivElement
+                                        ====> Comment
+                                        ====> Document
+        theory-lectures-v2.pdf
+            Slide 143
+
+Selecting, creating and deleting elements ( TRABAJO )
+    Selecting
+        All the HTML
+            document.documentElement
+        Head
+            document.head
+        Body
+            document.body
+        Other elements
+            document.querySelector()
+            document.querySelectorAll()         ====> Generate a nodeList
+        Get elements by ID
+            document.getElementById()
+        Get elements by tag name
+            document.getElementsByTagName()     ====> Generate a live collection: updates automatically (if we delete something in the browser, the list actuallize)
+        Get elements by class
+            document.getElementsByClassName()
+    Inserting
+        .insertAdjacentHTML()
+            document.querySelector('').insertAdjacentHTML(POSITIONtoATTACHinHTML, TEXT)
+                Position to attach in HTML
+                    'beforebegin': Before current element. Out of the element.
+                    'afterend': After current element. Out of the element.
+                    'afterbegin': Inside current element, after his first child element
+                    'beforeend': Inside current element, before his last child element
+            document.querySelector('.main').insertAdjacentHTML(afterbegin, "Prueba")
+        .prepend()
+            .prepend(document.createElement('div').innerHTML = 'We use cookies for improved functionality and analytics.';)
+            Adds the element as the first child of this element
+        .append()
+            .append(document.createElement('div').innerHTML = 'We use cookies for improved functionality and analytics.';)
+            Adds the element as the last child of this element
+        If we want to insert the same element prepend and append
+            .append( document.createElement('div').innerHTML = 'We use cookies for improved functionality and analytics.'.cloneNode(true) )
+        .before()
+            Same as prepend
+        .after()
+            Same as append
+    Creating
+        .createElement( ELEMENT )
+            .createElement('div')
+    Deleting
+        .remove()
+            document.querySelector(".boton").remove()
+            Method very recent
+        Before remove() we use
+            document.querySelector(".boton").parentElement.removeChild(document.querySelector(".boton"))
+            First select the parent node and later remove the child
+
+Styles, attributes and classes
+    Styles
+        document.querySelector(".boton").style.PROPIERTY
+        document.querySelector(".boton").style.backgroundColor = "blue
+            This styles are writing in the HTML, not in the css archive.
+                <button class="boton" style="background-color: rgb(55, 56, 61); width: 120%;" ></button>
+                This is called Inline Styles
+        It is not possible to read the propierties if they are in the css archive.
+            console.log( document.querySelector(".boton").style.height );               // Resultado: ""
+            Only we can read the styles if they are inline styles
+    --> getComputedStyle
+            It is possible to know the propierties in the css archive of the element using this method
+            console.log( getComputedStyle(document.querySelector(".boton")).height );         // Resultado: 50px
+        Other form to change properties styles
+            document.documentElement.style.setProperty( PROPIERTYnAME, VALUE);
+            document.documentElement.style.setProperty('--color-primary', 'orangered');
+            document.body.style.setProperty('background-color', 'blue');
+            It is better to use style.PROPIERTY
+    Attributes
+        src ; alt ; id ; class ; ...
+        Select the attribute
+            document.querySelector().src
+            document.querySelector().alt
+            document.querySelector().className
+            If we create a non standar attribute, JS can't read it
+                document.querySelector().nuevo
+            But, exists one method to read this non-standard attribute
+                document.querySelector().getAttribute('nuevo')
+        Setting the value of the attribute
+            document.querySelector().alt = '';
+            document.querySelector().alt = 'Beautiful minimalist logo';
+            document.querySelector().setAttribute(PROPIERTY, VALUE)
+            document.querySelector().setAttribute('company', 'Bankist')
+        Data attributes
+            HTML    ==>     data-version-number="3.0"
+            JS      ==>     qs.dataset.versionNumber        // Resultado: 3.0
+    Classes
+        qs.classList.add(' ' , ' ');
+            --> qs.className = 'jonas'; ==!==> DON'T USE, OVERRIDE ALL THE EXISTING CLASSES
+        qs.classList.remove(' ' , ' ');
+        qs.classList.toggle(' ' , ' ');
+        qs.classList.contains(' ' , ' ');
+
+Implementing smooth scrolling
+    Old School
+        Know the coordinates
+            .getBoundingClientRect()
+            console.log(qs.getBoundingClientRect())         // Resultado: bottom: 1542, height: 1530, left: 0, right: 1024, top: 12, width: 1024, x: 0, y: 12
+            The coordinates are relative to the visible view port. If we scroll the page, the coordinates will change
+                Current scroll (x/y): window.pageXOffset, pageYOffset
+                Height/width viewport: document.documentElement.clientHeight, document.documentElement.clientWidth
+        Scrolling
+            window.scrollTo(LEFTPOSITION , TOPPOSITION);                            // Relative to the viewport, NOT to the document
+            window.scrollTo(s1coords.left, s1coords.top);
+            To fixed the relative position we can add the current position
+            window.scrollTo(LEFTPOSITION + window.pageXOffset, TOPPOSITION + window.pageYOffset);        // Absolute position
+            window.scrollTo(s1coords.left, s1coords.top + window.pageYOffset);
+        Smooth Scrolling
+            We use the same scrollTo but we pass one object
+            qs.addEventListener('click', function () {
+                window.scrollTo({
+                        left: qs.getBoundingClientRect().left + window.pageXOffset,
+                        top: qs.getBoundingClientRect().top + window.pageYOffset,
+                        behavior: 'smooth',
+                })}
+    Modern School. Only work in modern browsers
+        Similar than old school but faster and without coordinates
+            qs.addEventListener('click', function () {
+                qs.scrollIntoView({ 
+                    behavior: 'smooth' 
+                })
+            }
+
+Types of events and event handlers
+    Event: signal that is generated by a certain DOM node.
+        addEventListener(TYPEEVENT, FUNCTION)       ----> Modern JS
+            qs.addEventListener('click', function(){ console.log('clicking') } )
+            Permit multiple events: qs.addEventListener("click", cl("1"));  qs.addEventListener("click", cl("2"));          // Resultado: 1, 2
+            We can remove an event handler
+        onTYPEEVENT = FUNCTION                      ----> OLD JS
+            qs.onclick = function(){ console.log('clicking') };
+            Override the events: qs.onlick = cl("1");  qs.onlick = cl("2");                                                 // Resultado: 2
+            Can NOT remove an event handler
+        Click mouse, mouse moving, triggering the full screen mode, etc
+    Events
+        https://developer.mozilla.org/en-US/docs/Web/Events
+        https://developer.mozilla.org/en-US/docs/Web/API/Element
+        The most importants are the "Mouse events" and the "Keyboards events"
+        Type event: mouseenter  
+            Work like "hover" in CSS
+        Type event: mouseleave
+            The opposite of mousenter
+    Remove event listener
+        Necesary the function was outside.
+            const alertH1 = function () { console.log('Mouse OUT')};
+        .removeEventListener inside the function
+            const alertH1 = function(){cl, qs.removeEventListener(TYPEeventListener, alertH1)}
+        It is possible remove after a while
+            setTimeout(()=> qs.removeEventListener(TYPEeventListener, alertH1), milliseconds)
+    Using HTML attribute
+        This actually should NOT be used
+        Define directly on HTML
+            <h1 onclick="console.log('Mouse OUT') >Titulo</h1>
+
+Event propagation: bubling and capturing ( Page 146 )
+    Capturing phase
+        The event is in the document, and travel allong the nodes until the target
+            Document --> Element(html) --> El(body) --> El(section) --> El(p) --> El(a)
+    Target phase
+        Then the event reaches the target, the target phase begins.
+        Event listeners wait for a certain event to happen on a certain element and as soon as the event occurs, it runs
+            document.querySelector("a").addEventListener("click",function)        
+    Bubling phase
+        Then the event travel all the way up to the document route again
+            Document <-- Element(html) <-- El(body) <-- El(section) <-- El(p) <-- El(a)
+        So, we say that events bubble up from the target to the document route
+    So as an event travels down and up the tree, they pass through all the parent elements but not through any sibling element
+    This is very important bassically the event happen in all of the parent elements.
+        If we attach the same event listener also to the parent element, then we would get the exact result
+        document.querySelector("a").addEventListener("click",function)
+        document.querySelector("p").addEventListener("click",function)
+        document.querySelector("section").addEventListener("click",function)
+    Now by default, events can only be handle in the targer and in the bubbling phase
+    However, we can set up event listeners in a way that they listen to events in the capturing phase instead
+    We can say that "events propagate from one place to another"
+    Also not happen on ALL events
+    So, if one element has one event listener and his parent has other event listening with the same type of event(click, mouseenter). Both will ocurr
+        qs("button").addEventListener("click",function(){console.log("Child Node")})
+        qs("section").addEventListener("click",function(){console.log("Parent Node")})
+        <section>
+            <button>Boton</button>
+        </section>
+        When we click on "Boton", the console show: Child Node, Parent Node
+    Event target
+        That triggers an event
+        addEventListener("click", function(e){ console.log( e.target )})
+    Current target
+        Element on which the event is attached
+        addEventListener("click", function(e){ console.log( e.currentTarget )})
+        e.currentTarget === this
+    Stop the event propagation
+        We can stop the bubbling
+        e.stopPropagation() in the function
+        qs("button").addEventListener("click",function(){console.log("Child Node");e.stopPropagation()})
+        qs("section").addEventListener("click",function(){console.log("Parent Node")})
+        When we click on "Boton", the console show: Child Node
+        NOT A GOOD IDEA TO STOP THE PROPAGATION
+    Capturing phase propagation
+        addEventListener only ocurr in bubling phase but, we can change it
+            addEventListener("click", function, false)          // Capturing in bubling phase(default)
+            addEventListener("click", function, true)           // Capturing in capture phase
+        The result is the same but the path is the other way around
+
+Event delegation: implementing page navigation
+    We put the event listener on a common parent of all the elements that we are interested
+    Not possible to attach listeners to element that not exists in the HTML, but we can create a listener to the parent and create dynamically the element who trigger it
+    Steps
+        1. We add the event listener to a common parent element of all the elements that we're interested in
+        2. Determine what element originated the event ====> e.target
+    Matching strategy
+        It is goot to check if the target element contains the class that we are interested in
+        Because, if we click in the element parent, and not in the chil that we are interested, the event trigger
+    Example
+        document.querySelector(PARENT).addEventListener('click', function (e) {
+            e.preventDefault();
+            // Matching strategy
+            if (e.target.classList.contains(CHILD)) {
+                document
+                    .querySelector(e.target.getAttribute('href'))
+                    .scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+DOM traversing
+    Is walking through the DOM. Which means that we can select an element based on another element.
+    Is very important because sometimes we need to select elements relative to a certain other element
+        A direct child or a direct parent element
+        Sometimes we don't even know the structure of the DOM at runtime
+    Going downwards: selecting the Childs
+        document.querySelector(PARENT).querySelector(CHILD)
+        document.querySelector(PARENT).querySelectorAll(CHILD)
+        No matter how deep these child elements would be inside the parent element
+        document.querySelector(".padre1").querySelectorAll(".hijo")
+        If exist more ".hijo" in the document, they will not be selected because they are not childs of ".padre1"
+        Know the child elements
+            qs.childNodes       Give all the child nodes(whether or not they have class). Not very used
+            qs.children         Give all only the elements. Only for direct childs
+        First and last element child
+            qs.firstElementChild
+            qs.lastElementChild
+    Going upwards: selecting parents
+        Direct parent
+            qs.parentNode
+            qs.parentElement
+    --> Not direct parent
+            qs.closest("PARENT")
+            Very used in event delegation
+            Is the "opposite" of querySelector
+    Going sideways: selecting siblings
+        We can only access direct siblings, basically only the previous and the next one
+        Elements
+            qs.previousElementSibling
+            qs.nextElementSibling
+        Nodes: Not very used, better option working with elements
+            qs.previousSibling
+            qs.nextSibling
+        For all the sibling
+            qs.parentElement.children
+
+Passing arguments to event handlers
+    Structure of the listener for 1 parameter
+        qs.addEventListener('click', FUNCTION.bind( PARAMETER ));
+    Structure of the function for 1 parameter
+        const logueando = function (e) {
+            console.log( this );
+        };
+    Structure of the listener for more than 1 parameter
+        qs.addEventListener('click', function(){ FUNCTION( PARAMETERS ) });
+    Structure of the function for more than 1 parameter
+        const logueando = function (parameter1, parameter2) {
+            console.log( parameter1 , parameter2 );
+        };
+
+Implementing a sticky navigation: the scroll event (NOT USE)
+    NOT use this scroll event because fire all the time, no matter how small the change is here in the scroll.
+        Bad performance, specifically in mobile
+    When window is larger than initial coords section (depends of the windows itself), add the class "sticky" in CSS.
+        const initialCoords = qs(".section1").getBoundingClientRect();
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > initialCoords.top) {
+                nav.classList.add('sticky');
+            } else {
+                nav.classList.remove('sticky');
+            }
+        });
+
+Implementing a sticky navigation: intersection observer API
+    Much better method than previous
+    This API allows our code to observe changes to the way that a certain target element intersects another element or the way it intersects the viewport
+    Creation
+        const observer = new IntersectionObserver(observerCallBack, observerOptions);
+    observerCallBack
+        This function will get called each time that the observer element, or our target element.
+        It's intersecting the root element at the threshold that we defined.
+        No matter if we are scrolling down or up.
+            const observerCallBack = function (entries, observer) {
+                console.log("HEY");
+            };
+    observerOptions
+        Object formed by two propierties
+        const observerOptions = {
+            root: null,                     // Is the element that the target is intersecting. null == viewport
+            rootMargin: "+/-90px"           // Margin around the root.
+            rootMargin: "-90px"             // The function fires 90px before the threshold was actually reached
+            threshold: 0.1,                 // Is the percentage of intersection at which the observer callback will be called(0.1===10%)
+            threshold: [0.1, 0.5, 0.8],     // Can be exist multiple threshold
+            threshold: [0, 1],              // 0: Before it is seen // 1: After it is seen
+        };
+    Calling the observer
+        observer.observe(TARGETELEMENT);
+        observer.observe(section1);
+
+Revealing elements on scroll
+    The animation actually comes from CSS
+    We will achieve this by simply adding a class to each of the sections
+        .section--hidden {
+            opacity: 0;
+            transform: translateY(8rem);
+        }
+        It is better to add and remove the class with JS because a lot of people disable JS and this people don't see the web
+    It works using the intersection observer API
+        const revealSection = function (entries, observer) {
+            const [entry] = entries;
+            if (!entry.isIntersecting) return;
+            entry.target.classList.remove('section--hidden');
+            // When the observer do it work, disable the observer
+            observer.unobserve(entry.target);
+        };
+        const sectionObserver = new IntersectionObserver(revealSection, {
+            root: null,
+            threshold: 0.15,
+        });
+        We add the hidden class and put the observer for each section
+        qs.forEach(function (section) {
+            sectionObserver.observe(section);
+            section.classList.add('section--hidden');
+        });
+
+Lazy loading images
+    Very important to optimice the images in the web ==> Lazy Loading Images
+    For low resolution images we use in the HTML (1KB)
+        src=".../image.jpg"
+    For the same image but with more resolution in the HTML (10MB)
+        data-src=".../imageHD.jpg"
+    Those names are not standards but it is good to use it for simplicity
+    Filter in CSS for low resolution images
+        .lazy-img {
+            filter: blur(20px);
+        }
+    It is very important to use this for better perfomance for users with low internet
+    We use the intersection observer API
+        We only select the img with the property "data-src" which have the blur effect
+        const imgTargets = document.querySelectorAll('img[data-src]'); 
+        const loadImg = function (entries, observer) {
+            const [entry] = entries;
+            if (!entry.isIntersecting) return;
+            // Replace the src with data-src
+            entry.target.src = entry.target.dataset.src;
+            // Remove the blur filter. We remove the class blur after load the new image with the event listener. Pretty effect
+            entry.target.addEventListener('load', function () {
+                entry.target.classList.remove('lazy-img');
+            });
+            observer.unobserve(entry.target);
+        };
+        const imgObserver = new IntersectionObserver(loadImg, {
+            root: null,
+            threshold: 0,
+            rootMargin: '200px',           // To start loading before the user arrives
+        });
+        // Add the observer for each image
+        imgTargets.forEach(img => imgObserver.observe(img));
+
+Lifecycle DOM events
+    Lifecycle: the page is first accessed until the yser leaves it
+    DOM content loaded event
+        Fired by the document as soon as the HTML is completely parsed(HTML has been downloaded and been converted to the DOM tree)
+        Not wait for images and other external resources to load. Just HTML and JS need to be loaded.
+        Al scripts must be downloaded and executed before the DOM content loaded event can happen
+            document.addEventListener("DOMContentLoaded", function (e) {})
+        Important to load the JS after the page loaded at 100% when we call the JS at the beginning in the HTML
+            <script src="script.js"></script>       Line 15: we put all the JS code inside that listener and when the page was parsed, JS will run
+            <script src="script.js"></script>       Line 400: Not necesary this listener. At the end of all.
+        This event in modern JS (DOM content loaded event) is the equivalent of "document.ready" in JQuery
+    Load Event
+        Fired when all the page was downloaded: CSS, images, external resources, ect
+            window.addEventListener('load', function (e) {})
+    Before unload event
+        Created immediately before a user is about to leave a page. For example: after clicking the close button in the browser
+            window.addEventListener('beforeunload', function (e) {}
+        We can use this event to ask users if they are 100% sure that they want to leave the page
+            e.preventDefault();
+            console.log(e);
+            e.returnValue = ''; Not possible to personalice the message, because a lot of people abuse of this
+
+Efficient script loading: defer and sync (Page 149)
+    We can write the script tag in the head of the HTML or in the body end
+        <head>
+            <script src="script.js">
+        </head>
+        <body>
+            ...
+            <script src="script.js">
+        </body>
+    Regular
+        Example
+            <script src="script.js">
+        Head
+            1. Start parsing HTML
+            2. Stop parsing HTML: Read and execute the scripts JS
+            3. Finish parsing HTML
+            4. DOMContentLoaded
+            ---- Parsing HTML ----> Wating (read and execute JS) ----> Finish parsing HTML
+            This is not very efficient because the parse stop and this impact on the pages performance.
+            NEVER include the script JS in the head
+        Body End
+            1. Parsing all the HTML
+            2. Without waiting: Read and execute the scripts JS
+            3. DOMContentLoaded
+            ---- Parsing HTML ----> Read and execute JS
+            The parse HTML no stop and this is better for pages performance.
+            ALWAYS include the script JS in the body end
+            But this is is no perfect for asynchronous
+        --> Used when
+                Use if you need to support old browsers
+    Async
+        Example
+            <script async src="script.js">
+        Head
+            1. Parsing HTML and read the scripts JS
+            2. Stop parsing HTML: Execute the scripts JS
+            3. Finish parsing HTML
+            4. DOMContentLoaded
+            ---- Parsing HTML and read JS ----> Wating (execute JS) ----> Finish parsing HTML
+            The parsing HTML and the reading of the scripts JS working at the same time but still stopping for executing the JS
+            Beter performance than regular
+            Usually the DOMContentLoaded event waits for all scripts to execute, except for async scripts. So, DOMContentLoaded fires after async scripts execute
+                Parsing HTML------------
+                Execute normal JS-------
+                                        DOMContentLoaded
+                Execute async JS------------------                        
+            Scripts not guaranteed to execute in order
+        --> Used when
+                Use for 3rd-party scripts where order doesn’t matter (e.g. Google Analytics)
+        Body End
+            Don't make sense because the read and the execution happen at the end and "async" makes no sense here
+    Defer (aplazar)
+        Example
+            <script defer src="script.js">
+        Head
+            1. Parsing all the HTML and read the scripts JS
+            2. Without waiting: Execute the scripts JS
+            4. DOMContentLoaded
+            ---- Parsing HTML and read JS ----> Execute JS
+            The parsing HTML and the reading of the scripts JS working at the same time and JS execute upon finished the parsing HTML
+            Similar performance than async but the parsing is never interrupted and many times we wan't this.
+            DOMContentLoaded event fires after defer script is executed
+                Parsing HTML------------
+                Execute normal JS-------
+                                                DOMContentLoaded
+                Execute async JS----------------
+            Scripts are executed in order
+        --> Used when
+                This is overall the best solution! Use for your own scripts, and when order matters (e.g. including a library)
+        Body End
+            Don't make sense because the read and the execution happen at the end and "defer" makes no sense here
+    You can, of course, use different strategies for different scripts.
+        Usually a complete web applications includes more than just one script.
+        In all browsers ignore the async and defer
+            
+
 

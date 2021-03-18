@@ -103,7 +103,16 @@ Cosas interesantes que saber
             };
         Llamando al observador
             observer.observe(qs('.header'));
-
+    Crear clases en JS
+        function CLASE (PARAMETRO1, PARAMETRO2, etc){
+            this.PARAMETRO1 = PARAMETRO1
+            this.PARAMETRO2 = PARAMETRO2
+            ...
+        }
+        Para crear los metodos que heredaran de la clase se usan los prototipos
+            CLASE.prototipe.METODO = function () {}
+        Para usar los metodos heredados de la clase
+            OBJETO.METODO(PARAMETROS)
 
 
 
@@ -2754,6 +2763,263 @@ Efficient script loading: defer and sync (Page 149)
     You can, of course, use different strategies for different scripts.
         Usually a complete web applications includes more than just one script.
         In all browsers ignore the async and defer
-            
+         
+
+---------------------- OBJECT ORIENTED PROGRAMMING (OOP) WITH JS ----------------------
+
+What is object-oriented programming? (Page 153)
+    Definition
+        Object-oriented programming (OOP) is a programming paradigm(style of code, “how” we write and organize code) based on the concept of objects.
+        We use objects to model/describe real-world (E.g. user or todo list item) or abstract(E.g. HTML component or data structure) features.
+        Objects may contain data (properties) and code (methods). By using objects, we pack data and the corresponding behavior into one block.
+            const user = {
+                user: "Jonas",
+                pass: "1234",
+                login(pass){},
+                sendMessage(str){}
+            }
+        In OOP, objects are self-contained pieces/blocks of code.
+        Objects are building blocks of applications, and interact with one another.
+        Interactions happen through a public interface(=API): methods that the code outside of the object can access and use to communicate with the object.
+        OOP was developed with the goal of organizing code, to make it more flexible and easier to maintain (avoid “spaghetti code”)
+    Classes and instances (traditional OOP)
+        Conceptual overview: it works a bit differently in JavaScript. Still important to understand!
+        Class: Like a blueprint from which we can create new objects.
+            User {
+                user,
+                pass,
+                email
+                login(pass){},
+                sendMessage(str){}
+            }
+        Instance: New object created from the class. Like a real house created from an abstract blueprint
+            new User("Jonas")                   new User("Pepe")
+            {                                   {
+                user: "Jonas",                      user: "Pepe",
+                pass: "1234",                       pass: "truco",
+                email: "jonas@jose.com"             email: "pepe@jose.com"
+                login(pass){},                      login(pass){},
+                sendMessage(str){}                  sendMessage(str){}
+            }                                   }
+        Just a representation, NOT actual JavaScript syntax! JavaScript does NOT support real classes like represented here.
+    The 4 fundamental OOP principles
+        Abstraction
+        Encapsulation
+        Inheritance
+        Polymorphism
+    Abstraction
+        Ignoring or hiding details that don’t matter, allowing us to get an overview perspective of the thing we’re implementing, instead of messing with details that don’t really matter to our implementation.
+        Real phone{
+            charge,
+            volume,
+            voltage,
+            temperature,
+            homeBtn(){},
+            volumeBtn(){},
+            screen(){},
+            verifyVolt(){},
+            verifyTemp(){},
+            ...
+        }           These are the complete features of a phone.
+        Abstracted phone{
+            charge,
+            volume,
+            homeBtn(){},
+            volumeBtn(){},
+            screen(){},
+        }           These are the features a user needs, but the phone still using all the features. This is the abstraction
+        Another example is "addEventListener", we don't know how really works but, we use it and we don't need to know how really works.
+    Encapsulation
+        Keeping properties and methods private inside the class, so they are not accessible from outside the class.
+        Some methods can be exposed as a public interface (API).
+        Why?
+            Prevents external code from accidentally manipulating internal properties/state.
+            Allows to change internal implementation without the risk of breaking external code.
+        Example (NOT actually JavaScript syntax, the private keyword doesn’t exist)
+            user{
+                user,                           Accesible from outside the class
+                private pass,                   NOT accessible from outside the class
+                private email,                  NOT accessible from outside the class
+                login(pass) {
+                    this.pass === word          STILL accessible from within the class
+                }
+                private checkSpam(src){}        NOT accessible from outside the class
+                comment (str){
+                    this.checkSpam              STILL accessible from within the class
+                }
+            }
+    Inheritance
+        Making all properties and methods of a certain class available to a child class, forming a hierarchical(jerarquico) relationship between classes.
+        This allows us to reuse common logic and to model real-world relationships.
+        Example
+            PARENT CLASS                            CHILD CLASS (an admin is also a user)
+            User {                                  Admin {
+                user,               --Inherited-->      user,
+                pass,               --Inherited-->      pass,
+                email,              --Inherited-->      email,
+                                                        permissions,        OWN propierty
+                login(pass){},      --Inherited-->      login(pass){},
+                sendMessage(str){}, --Inherited-->      sendMessage(str){},
+                                                        deleteUser(){}      OWN method
+            }                                       }
+        Child class extend parent class (own propierties and methods)
+    Polymorphism
+        A child class can overwrite a method it inherited from a parent class [it’s more complex that that, but enough for our purposes]
+        Example
+            PARENT CLASS                            CHILD CLASS
+            User {                                  Author {
+                user,                                   user,
+                pass,                                   pass,
+                login(pass){                            login(pass, key){
+                    Logic           --Polymorphism-->       Other logic     OWN method, overwriting the parent class
+                },                                      },
+            }                                       }
+        Overwrite the parent method in the child class, not the parent method in the parent class.
+
+OOP in JavaScript
+    Classical OOP: classes
+        Class       --instantiation-->                      Instance
+        Objects (instances) are instantiated from a class, which functions like a blueprint.
+        Behavior(comportamiento)(methods) is copied from class to all instances.
+    JS OOP: prototypes
+        Prototype   <--prototypal inheritance/delegation--  Object
+            Prototype contains methods and propierties
+            Object can access methods and propierties
+        Objects are linked to a prototype object.
+        Prototypal inheritance: The prototype contains methods (behavior) that are accessible to all objects linked to that prototype.
+        Behavior is delegated to the linked prototype object.
+        Example
+            const num = [];
+            num.map();
+                In MDN web docs
+            Array.prototype.map()
+                Array.prototype is the prototype of all array that we create in JavaScript. All arrays have access to the map method.
+            Therefore, this "num" array cointains all the array methods, including map(), lenght, concat(), etc
+        It means that all arrays are linked to "array.prototype" and it has access to all the methods defined on the "array.prototype" object.
+    The 4 pillars of OOP are still valid!
+        Abstraction
+        Encapsulation
+        Inheritance
+        Polymorphism
+    3 ways of implementing prototypal inheritance in JS
+        “How do we actually create prototypes? And how do we link objects to prototypes? How can we create new objects, without having classes?”
+            How do we implement OOP in JS?
+        Constructor functions
+            Technique to create objects from a function.
+            This is how built-in objects like Arrays, Maps or Sets are actually implemented.
+        ES6 Classes
+            Modern alternative to constructor function syntax.
+            Called “Syntactic sugar” instead of constructor functions. Behind the scenes, ES6 classes work exactly like constructor functions.
+            ES6 classes do NOT behave like classes in “classical OOP”.
+        Object.create()
+            The easiest and most straightforward(directamente) way of linking an object to a prototype object.
+            Not as used as the other methods.
+
+Construction functions and the NEW operator
+    Contruction functions always start with Capital letter.
+    Arrow functions not work as a function cosntructor because it has NOT this own "this keyword".
+    Only function expresions and functions declarations
+    The only difference between a regular function and a constructor function is that we call the constructor using the "new keyword"
+        new Person('Jonas', 1990);
+    Steps
+        1. New empty object is created.
+        2. The function is called and in this function call, the "this keyword" will be set to this newly created object
+        3. This newly created object is linked to a prototype.
+        4. The function automatically return that empty object from the beginning, but no longer needs to be empty.
+            This is the trick of making the Construction function work.
+    Example prototype
+        const Person = function (firstName, birthYear) {
+            this.firstName = firstName;
+            this.birthYear = birthYear;
+        };
+    Creating objects
+        const jonas = new Person('Jonas', 1990);
+        const matilda = new Person('Matilda', 1997);
+        const jack = new Person('Jack', 1975);
+    We can say (not at all correct) that "jonas" is an instance/object of the class "Person"
+        console.log(jonas instanceof Person);               // Resultado: true
+        console.log("Jose" instanceof Person);              // Resultado: false
+    Methods
+        Incorrect use of methods. NEVER create a method inside of a constructor function.
+            Because we create a thousands of objects with thousands of copies of the function.
+            This is terrible for performance
+            const Person = function (firstName, birthYear) {
+                this.firstName = firstName;
+                this.birthYear = birthYear;
+                this.calcAge = function () {
+                    cl(2021-this.birthYear)
+                }
+            };
+
+Prototypes
+    Each and evey function in JS has a propierty called prototype
+        Includes constructor functions
+    Every object that's created by a certain constructor function will get access to all the methods and propierties that we define on the constructors prototype property
+    Set methods to prototype
+            Person.prototype
+            Person.prototype.calcAge = function () { };
+        Example
+            jonas = { name: "Jonas", birthYear: 1990 }
+            Person.prototype.calcAge = function() { console.log(2021 - this.birthYear) };
+            jonas.calcAge();                                                                    // Resultado: 31
+            Person.calcular = function() { console.log(2021 - this.birthYear) };
+            jonas.calcular();                                                                   // Resultado: Error
+        So, jonas has NOT "calcAge" but it can access to the method. Prototypal inheritance
+     -->We can create a lot of objects without methods inherited by the class, but we can still access and improve the performance without creating copies of the methods in    each object
+        In summary, to create methods for objects in classes, the best solution is
+            Class.prototype.FUNCTION = function () {}
+        The objects no create copies of the method but, they can access an use it
+        How and why does this work?
+            It works because any object always has access to the methods and propierties from its prototype.
+                The prototype of jonas is "Person.prototype"
+                console.log(jonas.__proto__); ==> The prototype of jonas
+            The prototype of the jonas object is essentially the prototype property of the constructor function
+                console.log(jonas.__proto__ === Person.prototype);                  // Resultado: true
+                Person.prototype is not the prototype of Person, but instead, it is what's gonna be used as the prototype of all the objects that are created with the person   constructor function.
+                console.log(Person.prototype.isPrototypeOf(jonas));                 // Resultado: true
+                console.log(Person.prototype.isPrototypeOf(Person));                // Resultado: false
+        Is better keep in mind, only in mind(not work)
+            .prototype === .prototypeOfLinkedObjects
+    Set propierties to prototype
+        Creation
+            Person.prototype.species= "Homo Sapiens"
+            console.log(jonas);                                 // The "species" propierty is in "__proto__"
+            console.log(jonas.species);                         // Resultado: Homo Sapiens
+        Check if properties are own or prototypes
+            jonas.hasOwnProperty('firstName')                   // Resultado: true
+            jonas.hasOwnProperty('species')                     // Resultado: false
+
+Prototypal inheritance and the prototype chain (Page 167)
+    How it works with function constructors and ES6 classes? (Not with "object.create()"
+        1. An empty object is created.
+        2. "This keyword" in constructor function call is set to the new object.
+        3. The new object is linked (__proto__ property) to the constructor function’s prototype property.
+        4. The new object is returned from the constructor function call.
+        So, when JS look a method, first look inside the object
+            jonas.calcAge()
+        But, jonas object has NOT the method
+            jonas={ name: "Jonas", birthYear: 1991 }
+        JS, look inside the __proto__ of the object and there it is found the method.
+        So, __proto__ linked the object with his prototype
+        This looking in the prototype is called "Prototypal Inheritance/Delegation"
+     -->It is a lot of powerfull for 1.000 object pointing to the same prototype, because we DON'T have 1.000 methods, only 1 used by all the objects.
+    Prototype chain
+        Is the fact that the object is connected to a prototype and the ability of looking up methods and properties in a prototype.
+            Constructor function    --.prototype-->     Prototype
+            [Person()]              <--.constructor--   [Person.prototype]
+        But, the classes that we create has his own prototypes itself which have his own methods predefined.
+            Object  --.__proto__-->     Prototype       --.__proto__-->     Prototype
+            jonas   --.__proto__--> Person.prototype    --.__proto__--> Object.prototype
+        For example
+            jonas.hasOwnProperty()
+            1. JS look inside the object "jonas" for the method "hasOwnProperty" but don't exists
+            2. JS look inside the prototype of "jonas" for the method, so look inside "Person" but don't exists
+            3. JS look inside the prototype of the prototype of "jonas", so look inside "Object" and finds "hasOwnProperty" inside it and execute.
+        So, prototype chain is very similar to scope chain. Series of links between objects, linked through prototypes
+            Object  --.__proto__-->     Prototype       --.__proto__-->     Prototype
+            jonas   --.__proto__--> Person.prototype    --.__proto__--> Object.prototype
+            >>>>>>--------------------Prototype Chain---------------------------->>>>>>
+
+Prototypal Inheritance on Built - in objects
 
 

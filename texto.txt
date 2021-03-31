@@ -110,9 +110,46 @@ Cosas interesantes que saber
             ...
         }
         Para crear los metodos que heredaran de la clase se usan los prototipos
-            CLASE.prototipe.METODO = function () {}
+            CLASE.prototype.METODO = function () {}
         Para usar los metodos heredados de la clase
             OBJETO.METODO(PARAMETROS)
+    GIT
+        Primero creamos una branch(rama) para luego juntamos la branch con la master
+            Creamos branch
+                git branch NOMBRE ==> se crea en mi maquina
+            Vamos a ir a la branch creada
+                git checkout NOMBRE ==> cambiamos a la branch donde trabajaremos
+                git branch ==> vemos todas las branch que estan en mi maquina
+                git branch -a ==> vemos todas las branch, de mi maquina y del server
+            Para guardar los datos modificados en mi branch, no en el main
+                git push -u origin NOMBRE
+            Unir mi branch con el master
+                git checkout master ==> Pasamos a la branch master
+                git pull origin master ==> para asegurarnos que tenemos la ultima version
+                git branch --merged  ==> nos muestra las branch que hemos mezclado hasta ahora
+                git merge NOMBRE  ==> Mezclamos mi branch con el master
+                git push origin master ==> Subimos los cambios al servidor
+            Borrar branch, cuando no se vaya a usar
+                git push origin --delete NOMBRE ==> borrado del repositorio externo, del servidor
+                git branch -d NOMBRE ==> borrado del repositorio de mi maquina
+            Resumen
+                1. Bajamos el codigo
+                2. Creamos una branch para trabajar y no modificar master
+                3. Trabajamos
+                4. Mezclamos mi branch con el master
+                5. Subimos el master
+        Errores de codigo y volver atras
+            git checkout NOMBREARCHIVO  ==> Resetea el codigo y lo deja sin la ultima modificacion
+        Ver archivos modificados
+            git log --stat
+        Mover un commit de una branch a otra(hemos commiteado en la master en vez en mi branch)
+            1. Copiar el commit ID
+            2. git checkout BRANCH
+            3. git cherry-pick COMMIT ID ==> Copiamos el commit a mi branch
+            4. git checkout master
+            5. git reset ==> Para eliminar el commit de la master
+        Ver todos los commits
+            git reflog
 
 
 
@@ -2881,6 +2918,15 @@ OOP in JavaScript
         Class       --instantiation-->                      Instance
         Objects (instances) are instantiated from a class, which functions like a blueprint.
         Behavior(comportamiento)(methods) is copied from class to all instances.
+    JS use functions (called constructors) as classes.
+    Constructor
+        Function design to create objects from a base.
+        Invoked used the "new keyword"
+        Example
+            const Person = function ( PAR1, PAR2, etc){
+                this.PROP1 = PAR1, // For standar, we use the same name to parameters and propier
+                this.name = name,
+            }
     JS OOP: prototypes
         Prototype   <--prototypal inheritance/delegation--  Object
             Prototype contains methods and propierties
@@ -3021,5 +3067,328 @@ Prototypal inheritance and the prototype chain (Page 167)
             >>>>>>--------------------Prototype Chain---------------------------->>>>>>
 
 Prototypal Inheritance on Built - in objects
+    Arrays
+        const lista = [3, 6, 4, 5, 6, 9, 3]
+        lista.__proto__ === Array.prototype     // Resultado: true
+    The arrays are objects
+        lista.__proto__.__proto__ is very similar than jonas.__proto__.__proto__
+    -> We can add methods to Arrays and use with inherite
+        Array.prototype.NAME = FUNCTION () {}
+        Array.prototype.unique = function () { return [...new set(this)]; }
+        console.log(lista.unique());            // Resultado: [3, 6, 4, 5, 9]
+        But, extending the prototype is NOT a good idea.
+            For small proyects where only work one person it is acceptable.
+            For huge proyects or multiple people are not a goot idea (example: the next version of JS may add a function with the same name)
+    The cause of we can call methods on fuctions it's because the functions are objects and objects have prototypes
+        console.dir(x => x + 1);        // __proto__ ==> Object.prototype
 
+ES6 classes
+    Allow us to do exact the same thing (add methods to constructor functions) but using a NICER and more MODERN syntax.
+    It is more similar than classes in Java.
+    Creation
+        const NAME = class {}   // Class expression
+        class NAME {}           // Class declaration
+                                Class are a special type of functions, therefore it has declaration and expresion
+    The class need a method called Constructor, that works exactly equal than later
+        class NAME {
+            constructor ( PARAM1, PARAM2, etc){
+                this.PARAM1=PARAM1;
+                this.PARAM2=PARAM2
+            }
+        class PersonCl {
+            constructor(firstName, birthYear) {
+                this.firstName = firstName;
+                this.birthYear = birthYear;
+            }
+        }
+    Creating an object
+        const OBJECT = new NAME (PARAMETERS)
+        const jessica = new PersonCl ("Jessica", 1980)
+    Adding methods to the class
+        class NAME {
+            constructor(){}
+            METHOD ( PARAMS ) { }
+        }
+        class PersonCl {
+            constructor(firstName, birthYear) { }
+            calcAge() {
+                console.log(2021 - this.birthYear);
+            }
+        }
+        PersonCl.prototype.calcAge = function () { cl(2021 - this.birthYear) }
+    When we create a new object, the methods of the class are NOT copied to the object.
+        Methods will be added to .prototype property
+        jessica has only propierties, not methods.
+        jessica.__proto__ has the method "calcAge"
+  --> Important things
+        Classes are NOT hoisted
+            We CAN'T use classes before they are declared in the code
+        Classes are first-class citizens
+            We can pass them into functions and also return them from functions
+        Classes are always executed in strict mode
+        
+Setters and Getters
+    Are functions that get and set a value. But they are used like propierties
+    Structure
+        const OBJECT = {
+            get FUNCTION () {}
+            set FUNCTION (1PARAMETER) {}
+        }
+        const account = {
+            movements: [200, 500, 120, 300],
+            get latest() {
+                return this.movements.slice(-1);
+            },
+            set latest(mov){
+                this.movements.push(mov)
+            }
+        }
+    Calling get
+        Like a propierty
+        OBJECT.FUNCTION
+        account.latest
+    Using set
+        Like a property
+        OBJECT.FUNCTION = VALUE
+        account.latest = 50
+    -->Is more common use "getMETHOD"/"setMETHOD" than "get METHOD"/"set METHOD"
+        const account = {
+            movements: [200, 500, 120, 300],
+            getlatest() {
+                return this.movements.slice(-1);
+            },
+            setlatest(mov){
+                this.movements.push(mov)
+            }
+        }
 
+Static methods
+    Are methods attached to the constructor, NOT attached to the prototype.
+    Example
+        Array.from()            // work
+        [1,2,3].from()          // Don't work
+    Developers know that it is related to Arrays.
+    We also say that the "from method" is in the Array name space. We used that term before for some methods in the number and in the internationalization name space.
+        Number.parseFloat()     // Another static method
+    We usually use these kind of as helpers that should be related to a certain constructor.
+    Creating
+        class CLASE{
+            static FUNCTION () {}
+        }
+        CLASS.FUNCTION = function () {}
+    Instance and static methods
+        class CLASE {
+            Static methods
+            static FUNCTION () {}
+            Instance methods
+            FUNCTION () {}
+        }
+    The static methods are NOT avaible on instance methods.
+    Static methods sometimes are still useful to implement some kind of helper function about a class or about a constructor function
+
+Object.create (Page 170)
+    Work different than constructor functions and classes.
+    Still the idea of prototypal inheritance, however there are NO prototype propierties involved and also NO constructor functions and NO new operator.
+    We use object.create to manually set the prototype of an object to any other object that we want.
+    This gonna be literally the prototype of all the person objects. Example
+        const personProto = {
+            calcAge() {
+                console.log(2021 - this.birthYear);
+            },
+        };
+    Create
+        const OBJECT = Object.create(CLASSPROTOTYPE)
+        const steven = Object.create(personProto)
+    Constructor functions
+        The object point to the prototype of the constructor function
+        Constructor function[Person()]     --.prototype-->     Prototype[Person.prototype]
+        object[jonas]   --.__proto__-->   Prototype[Person.prototype]
+    Object.create
+        The object point to the constuctor function
+        object[steven] --.__proto__-->    Prototype[personProto]
+    --> In real work this is de LEAST used way of implementing prototypal inheritance.
+    Is important to know it because, we found in the real world.
+    --> We need Object.create to link prototypes, to implement inheritance between classes.
+    Better way to create object with this function
+        const personProto = {
+            init(firstName, birthYear) {
+                this.firstName = firstName;
+                this.birthYear = birthYear;
+            },
+            calcAge () {}
+            greet () {}
+        };
+        const sarah = Object.create(personProto)
+        sarah.init("Sarah", 1985)
+        sarah.calcAge()
+        sarah.__proto__ === personProto         // Resultado: true
+
+Inheritance between classes: Constructor Functions (Page 174)
+    Allow objects to inherit methods from its prototypes.
+    For example: Class person (parent) and class student(child)
+        Student are a person but more specific type of person.
+    Structure
+        const student = function (firstName, birthYear, course){
+            Person.call(this, firstName, birthYear);                // We neeed to use "call" for select correctly the "this keyword"
+            this.course = course
+        }
+    This form only connect the propierties, for connect the prototypes it is necesary to use "Object.create()". And it MUST be created before all the methods
+        Student.prototype = Object.create(Person.prototype)
+        Not work if we use: Student.prototype = Person.prototype Because not inherit, we say both are the same.
+    When we do Object.create() we can use all the methods in prototype chain using inheritance
+    Prototype chain
+        Object[mike] ---> Prototype[Student.prototype] ---> Prototype[Person.prototype] ---> Prototype[Object.prototype] ---> null
+    Doing Object.create() the constructor of Student is Person, but should be Student. For fixed this error:
+        Student.prototype.constructor = Student
+
+Inheritance between classes: ES6 Classes
+    Structure
+        class CHILD extends PARENT {
+            constructor(PARAMETERS){
+                super(PARAMETERS)
+            }
+        }
+        class StudentCL extends PersonCl {
+            constructor(fullName, birthYear, course){
+                super(fullName, birthYear)
+                this.course = course;
+            }
+        }
+        const martha = new StudentCl('Martha Jones', 1999, 'Computer Science');
+    Extends keyword
+        The prototype chain was set up automatically by the "extends keyword"
+    The super function
+        Is the cosntructor function of the parent class
+        Always needs to happen first. Because this call to the super function is responsible for creating the "this keyword" in this subclass
+    Is not necesary the constructor function in subclasses if we not write new parameters, call automatically to the parent constructor.
+        class StudentCL extends PersonCl {
+        }
+        const martha = new StudentCL("Martha Jones", 1999)
+    -->This form of inheritance can be very problematic and dangerous in the real world when we are designing software.
+        Functional programming.
+
+Inheritance between classes: Object.create()
+    Structure
+        1. Conecting with the parent class
+        const StudentProto = Object.create(personProto);
+        2. Creating the "constructor function"
+        StudentProto.init = function (firstName, birthYear, course) {
+            3. Calling the constuctor function of the parent class
+            personProto.init.call(this, firstName, birthYear);
+            4. Creating the new parameters of the subclass
+            this.course = course;
+        };
+        5. Creating objects in the new subclass
+        const jay = Object.create(StudentProto);
+        6. Calling the constructor
+        jay.init('Jay', 1989, 'Computer Science');
+    The methods of the parent inherit to the child
+        jay.calcAge()       // Works
+    -->Developers think that this is better to create a fake subclass because in JS we are not creating fake subclasses, we are linking objects.
+    -->ES6 classes and constructor functons are more used in the real world
+
+Encapsulation: protected properties and methods
+    Prevent code from outside of a class to accidentally manipulate our data inside the class.
+        The code is not changing
+    When we expose only a small interface so a small API consisting only of a few public methods, then we can change all the other internal methods with more confidence.
+        The pin is not accesible to the public
+    JS classes do NOT yet support real data privacy and encapsulation. We do fake encapsulation by using a convention
+        this._pin = pin         // NOT trully private, it is just a convention. Developers agree to use and everyone does it this way.
+        _protectedMethod () {}
+    Is not accesible "acc1.pin" but it is still accesible "acc1._pin". 
+    Everyone in our team (and myself) will know that this property or method is not supposed to be touched outside of the class
+
+Encapsulation: private class fields and methods
+    Truly private class fields and methods.
+    NOT supported in JS YET.
+        Currently in class field stage 3
+        In the future we will class field stage 4 and it is possible than real private classes supported in JS
+    Class fields
+        In real OOP like Java, propierties are usually called fields.
+    Instance and prototype (in the console of the browser to understand better)
+        acc1{
+            currency: "EUR"
+            locale: "en"
+            owner: "Jonas"
+            pin: 1111
+            __proto__
+                constructor:
+                deposit:
+                getMovements:
+        }
+        Everything that is outside of __proto__ is the instance
+    Public fields
+        class account {
+            locale = navigator.language
+            constructor(){}
+        }
+        Without let or const
+    Private fields
+        Truly private. At the moment, only Google Chrome support these.
+        class account {
+            #movements = [];
+            constructor(){}
+        }
+        We use the "#"
+        Error message: Private field '#movements' must be declared in an enclosing class.
+            This message would be change because private fields are still on process.
+        If we define a private field but it is also a parameter, it is necesary to create first empty.
+        class account {
+            #pin;
+            constructor(pin){
+                this.#pin = pin
+            }
+        }
+        acc1{
+            owner: "Jonas"
+            #pin:
+            __proto__
+                constructor:
+        }
+    Public methods
+        Nothing new, all the traditional methods
+        class account {
+            deposit(value) {}
+            withdraw(value) {}
+        }
+    Private methods
+        Sintax is exactly the same than private fields
+        class account {
+            #approveLoan(value) {}
+        }
+        Not appears on the prototype. Only in the instance.
+        acc1{
+            #approveLoan:
+            __proto__
+                constructor:
+                deposit:
+        }
+    Static methods
+        It is private because this static methods will not be avaible on all the instances, only on the class itself.
+        class account {
+            static helper() {}
+        }
+        Not very important. Only to know that exist.
+
+Chaining methods
+    To use chaining methods we need to return this in the methods
+    acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(400);       // Error
+    class Account {
+        constructor(owner, currency, pin) {}
+        deposit(value) {
+            this._movements.push(value);
+            return this;
+        }
+        withdraw(value) {
+            this.deposit(-value);
+            return this;
+        }
+    }
+    acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(400);       // Not an error.
+
+ES6 classes summary
+    Classes are just “syntactic sugar” over constructor functions.
+    Classes are not hoisted.
+    Classes are first-class citizens.
+    Class body is always executed in strict mode.
+ª

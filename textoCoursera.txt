@@ -1,4 +1,4 @@
-Variables
+Variables Prueba de VIM
 	Empieza siempre por "var"
 		var message = "Hello World";
 		var palabra = "1";

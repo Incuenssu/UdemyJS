@@ -150,7 +150,40 @@ Cosas interesantes que saber
             5. git reset ==> Para eliminar el commit de la master
         Ver todos los commits
             git reflog
-
+    API de terceros
+        CDN: Content Delivery Network
+        Is better use NPM
+        Hoisted APIs we put in HTML BEFORE our own script
+    All the variable that are in global script, are avaiable for all the other scripts.
+    En JS moderno no se usa IF-ELSE, se usa mucho mas varios IFs. Queda mas claro
+    Si queremos que prettier ignore la siguiente linea usamos
+        // prettier-ignore
+        Ejemplo con prettier-ignore
+            // prettier-ignore
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        Ejemplo sin prettier-ignore
+            const months = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ];
+    Para generar una palabra con la primera letra en mayuscula
+        const minuscula = "palabra"
+        const mayuscula = `${minuscula[0].toUpperCase()}${minuscula.slice(1)}`
+    Para guardar datos (cookies) usamos localStorage
+    Para convertir un objeto a string usamos JSON
+        JSON.stringify()
+    Recargar la pagina
+        location.reload();
 
 
 
@@ -3437,4 +3470,96 @@ ES6 classes summary
 
 ---------------------- MAPTY APP: OOP, GEOLOCATION, EXTERNAL LIBRARIES, AND MORE! ----------------------
 
-Project overview
+How to plan a Web Project
+    Project Planning (small and medium projects)
+    Planning Step
+        1. User Stories
+            Description of the application’s functionality FROM the USER´S PERSPECTIVE. All user stories put together describe the entire application.
+            Common format: As a [type of user], I want [an action] so that [a benefit]
+                [type of user] == Who? Example: user, admin, etc.
+                [an action] == What?
+                [a benefit] == Why?
+                As a [user], I want [to see all my workouts when I leave the app and come back later], so that [I can keep using there app over time]
+        2. Features
+            With the user stories we obtain the features that we need to implement.
+        3. Flowchart
+            WHAT we will build
+            In the real-world, you don’t have to come with the final flowchart right in the planning phase. It’s normal that it changes throughout implementation!
+            It's a good idea to start with events: Page loads, user clicks on button 1, user submits new form, etc
+        4. Architecture
+            HOW we will build it
+    Development step
+        Implementation of our plan using code
+
+Using the geolocation API
+    Structure
+        navigator.geolocation.getCurrentPosition(POSTION, IFERROR)
+    Obtain coordinates
+        const { latitude } = position.coords;
+        const latitude = position.coords.latitude;
+        const { longitude } = position.coords;
+        const longitude = position.coords.longitude;
+    Linking coordinates with Google maps
+        console.log(
+            `https://www.google.com/maps/@${latitude},${longitude}`
+        );
+
+Displaying a map using Leaflet Library
+    Open-source JS library for mobile-friendly interactive maps
+        const coords = [latitude, longitude];
+        const map = L.map('map').setView(coords, 13);                       // 13: zoom
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',        // Exists a lot of styles, we can Google it
+            {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }
+        ).addTo(map);
+        L.marker(coords)
+            .addTo(map)
+            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+            .openPopup();
+
+Displaying a map marker
+    With the Leaflet library we can add an Event Listener to interact with the map
+        map.on("click", function (PARAMETER) {} );
+    Adding the marker in the map
+        map.on('click', function (mapEvent) {
+            // console.log(mapEvent);
+            const { lat, lng } = mapEvent.latlng;
+            L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(
+                    L.popup({
+                        maxWidth: 250,
+                        minWidth: 100,
+                        autoClose: false, // Set it to false if you want to override the default behavior of the popup closing when another popup is opened.
+                        closeOnClick: false, // Set it if you want to override the default behavior of the popup closing when user clicks on the map.
+                        className: 'running-popup',
+                    })
+                )
+                .setPopupContent('Workout!')
+                .openPopup();
+        });
+
+Working with local storage
+    API provide by the browser to save data
+    Very simple API, it is only advised to use for small amounts of data.
+    Structure
+        localStorage.setItem( KEY, VALUE )
+        localStorage.setItem( NAME, STRING )
+        localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+        localStorage.getItem( KEY )
+        localStorage.getItem( NAME )
+        const data = localStorage.getItem('workouts');
+    Convert any object to string
+        JSON.stringify()
+        JSON.stringify(this.#workouts)
+    Convert a string into an object
+        JSON.parse()
+        const data = JSON.parse(localStorage.getItem());
+    When we convert objects to string and later convert this string to object, we lost the prototype chain. NO __proto__ parents, only __proto__ Object
+    Remove string from localStorage
+        localStorage.removeItem( KEY );
+        localStorage.removeItem('workouts');
+    localStorage is blocking

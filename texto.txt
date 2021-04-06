@@ -184,6 +184,19 @@ Cosas interesantes que saber
         JSON.stringify()
     Recargar la pagina
         location.reload();
+    Web con un monton de APIs publicas
+        https://github.com/public-apis/public-apis
+    CORS
+        Cross Origin Resource Sharing
+        Sin CORS no podemos acceder a APIs de terceros desde nuestro codigo
+    Obtener objetos de un array
+        Si tenemos un array con varios objetos en su interior, podemos sacar cada objeto por separado
+        array = [Objeto1, Objeto2, etc]
+        const [OB1, OB2, etc] = array
+        DOnde OB1 = { lo que este dentro de Objeto1 }
+    ELlcodigo que es dificil de entender es mal codigo porque conyeva a mas bugs
+
+
 
 
 
@@ -3563,3 +3576,480 @@ Working with local storage
         localStorage.removeItem( KEY );
         localStorage.removeItem('workouts');
     localStorage is blocking
+
+
+---------------------- ASYNCHRONOUS JS: PROMISES; ASYNC/AWAIT AND AJAX ----------------------
+
+Asynchronous JS, Ajax and APIs
+    Synchronous
+        Most code is synchronous
+        Synchronous code is executed line by line
+        Each line of code waits for previous line to finish
+        Long-running operations BLOCK code execution.
+        Example:
+            alert("Text")
+            The code is blocked until we press the button of the alert
+            console.log("button pressed!")
+    Asynchronous
+        Asynchronous code is executed after a task that runs in the “background” finishes
+        Asynchronous code is NON-BLOCKING
+        Execution doesn’t wait for an asynchronous task to finish its work
+        Callback functions alone do NOT make code asynchronous
+            Only certain functions (as setTimeout) work in a asynchronous way
+        Async work very well for coordinating behavior of a program over a period of time
+        Example:
+            Loading a photo is asynchronous, because the code can't wait until the photo is loaded
+            qs(".imagen").src = "dog.jpg"
+    What are AJAX calls
+        AJAX: Asynchronous JavaScript And XML
+        Allows us to communicate with remote web servers in an asynchronous way
+        With AJAX calls, we can request data from web servers dynamically.
+        How it works (Request-response model or Client-server architecture)
+            Client          -- Request (asking for some data. get/post/etc.) ---->  Web Server
+            (e.g: browser)  -- Response (sending data back) --------------------->  (usually an API)
+    What is an API
+        API: Application Programming Interface
+        Piece of software that can be used by another piece of software, in order to allow applications to talk to each other
+        There are be many types of APIs in web development
+            DOM API
+            Geolocation API
+            Own Class API
+            "Online" API
+        “Online” API: Application running on a server, that receives requests for data, and sends data back as response
+            Just "API" or "Web API"
+        We can build our own web APIs (requires back-end development, e.g. with node.js) or use 3rd-party APIs
+            There is an API for everything
+        API data formats
+            No API uses XML data anymore
+            The term AJAX is just and old name
+    ----->  Most API these days use the JSON data format
+
+Our first Ajax call: xmlHttpRequest
+    Is an old school call
+    Structure
+        const request = new XMLHttpRequest();
+        request.open("GET", STRINGOFAPI)
+        request.open('GET', 'https://restcountries.eu/rest/v2/name/spain');
+        request.send();
+    Is necesary know that it exists for the future.
+    IS good to see how AJAX calls used to be handled with events and callback functions
+
+How the web works: requests and responses (Page 204)
+    Request-response model or Client-server architecture
+                                            ---- 3. HTTP Request            ---->
+        1. DNS  <-- DNS Lookup  --> Client  <-- 2. TCP/IP socket connection ---->  Web Server
+                                            <---- 4. HTTP Response          ----
+    Address example
+        https://restcountries.eu/rest/v2/alpha/
+        https://            ===> Protocol HTTP or HTTPS. HTTPS is encrypted using TLS or SSL
+        restcountries.eu    ===> Domain name
+        /rest/v2/alpha/     ===> Resource
+    Real IP address example
+        https://104.27.142.889:443
+        https://            ===> Protocol (HTTP or HTTPS)
+        104.27.142.889      ===> IP adress
+        :443                ===> Port number (default 443 for HTTPS, 80 for HTTP)
+    How it works
+        1. Make a request to a DNS
+            The domain name is NOT the real name access of the website
+            The DNS will convert the domain to the real IP address
+            https://restcountries.eu/rest/v2/alpha/     ===> https://104.27.142.889:443
+            When the real IP address has been sent back to the browser, it is possible to call it.
+        2. The TCP/IP socket connection is established between the browser and the server
+            TCP is the Transmission Control Protocol
+            IP is the Internet Protocol
+            So, TCP/IP is the conexion protocol that define how data travels across the web
+        3. HTTP request
+            Hypertext Transfer Protocol. Another comunication protocol
+            HTTP allows clients and web servers to communicate
+            Works sending request and response messages from client to server and back
+            Example:
+                GET /rest/v2/alpha/PT HTTP/1.1
+                    ===> Start line(most important line): HTTP method + request target + HTTP version
+                Host: www.google.com
+                User-Agent: Mozilla/5.0
+                Accept-Language: en-US
+                    ===> HTTP request headers (many different possibilities)
+                <BODY>
+                    ===> Request body (only when sending data to server, e.g. POST)
+        4. HTTP Request
+            Example
+                HTTP/1.1 200 OK
+                    ===> Start line: HTTP version + status code + status message. (Success or Fail)
+                Date: Fri, 18 Jan 2021
+                Content-Type: text/html
+                Transfer-Encoding: chunked
+                    ===> HTTP response headers (many different possibilities)
+                <BODY>
+                    ===> Response body (most responses). JSON data or HTML of the web page
+        5. If the response bring us the HTML of the web
+            1. index.html is the first to be loaded
+            2. Scanned for assets: JS, CSS, images
+            3. Process is repeated for each file
+    TCP/IP
+        TCP break the requests and responses down into thousands of small chunks called packets before they are sent
+            Break the packets, make the communication more fast
+        Once the small packets arrive at their final destination, TCP will reassemble all the packets into the original request or response
+        IP ensures that the packets arrives at the destination they should go using IP addresses on each packet
+
+Wellcome to callback hell
+    Sequence of AJAX calls, the second runs only after the first one has finished
+    Callback hell is when we have a lot of nested callbacks in order to execute async tasks in sequence
+    Example of callback hell
+        setTimeout(() => {
+            console.log('1 second passed');
+            setTimeout(() => {
+                console.log('2 seconds passed');
+                setTimeout(() => {
+                    console.log('3 seconds passed');
+                    setTimeout(() => {
+                        console.log('4 seconds passed');
+                        setTimeout(() => {
+                            console.log('5 seconds passed');
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }, 1000);
+    As a chain of the same function, it has the shape of a triangle.
+    The problem with callback hell is that
+        It makes our code look very messy.
+        It makes our code harder to maintain ==> hard to understand ==> more bugs
+    Escaping callback hell ===> using promises
+
+Promises and the fetch API
+    Fetch API
+        Structure
+            const NAME = fetch('URL');
+            const request = fetch('https://restcountries.eu/rest/v2/name/spain');
+    What is promises?
+        Promise: A container for a future value.
+            Example: Response from AJAX call
+        Example:
+            I buy lottery ticket(promise) right now
+            Lottery draw happens asynchronously
+            If correct outcome,I receive money, because it was promised
+        We no longer need to rely on events and callbacks passed into asynchronous functions to handle asynchronous results.
+            The first promise is show first, the second promise is show second, etc
+        Instead of nesting callbacks, we can chain promises for a sequence of asynchronous operations: escaping callback hell
+    Summary
+        We create a variable with no data.
+        The make a petition to the server for data ====> the promise
+        When the promise is complete, we receive the response of the promise
+        The variable created has now value
+    The promise lifecycle
+                                        ----> Fullfilled
+        Pending --Async task--> Settled 
+                                        ----> Rejected
+        Pending: Before the future value is available.      Example: the lottery ticket is buy
+        Settled: Asynchronous task has finished.            Example: a number is assigned to the lottery
+        Fullfilled: Success! The value is now available.    Example: We win the lottery
+        Rejected: An error happened.                        Example: We don't win the lottery
+    Normally we build a promise and consume this promise, but sometimes we wan't to build a promise but NO consume this promise
+
+Consuming promises
+    Structure
+        REQUEST.then( function (FULLFILLEDorREJECTED) {} )
+        REQUEST.then(function( response ){return response.json();}).then(function (data) { renderCountry(data[0]) });
+        REQUEST=PROMISE.then=PROMISE.then=PROMISE.etc
+    Simplified and clean same code
+        const NAME = function (PARAMETERS) {
+            fetch("URL")
+                .then(response => response.json())
+                .then(data => LOGIC);
+        };
+        const getCountryData = function (country) {
+            fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+                .then(response => response.json())
+                .then(data => renderCountry(data[0]));
+        };
+
+Handling rejected promises
+    Two ways to handling rejections
+    1.- Pass a second callback function into the "then method"
+        fetch('URL').then( NORMALFUNCTION(){}, SECONDFUNCTION(){})
+        fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(
+            response => response.json(),        // Normal Function
+            err => alert(err)                   // Second Function
+        )
+        If the NormalFunction trigger, the SecondFunction NOT trigger
+        If the NormalFunction give an error, the SecondFunction trigger
+        The error dissapear to the console and it is "catch the error" in the second function
+        We need to put the SecondFunction in each "then method"
+            fetch().then(NORMALFUNCTION(){}, SECONDFUNCTION(){}).then(NF, SC).then(NF, SC).then(NF, SC).then(NF, SC)
+    2.- Catch the error in the end of the chaining promises
+        fetch().then().then().then().then().then().catch()
+        fetch().then().then().then().then().then().catch( err=>alert(err) )
+    Finally method
+        No mather what happen to the promise response, this method allways trigger
+        fetch().then().then().then().then().then().catch().finally()
+        then method trigger then promise is Fullfilled and catch trigger when promise is rejected
+    --> ALWAYS USE CATCH()
+
+Throwing errors manually
+    When cannot find the URL
+        The promise still Fullfilled ==> no rejection ==> not catch method trigger
+    Is necesary to create error functions to catch it
+        fetch()
+        .then(response => {
+            if (!response.ok)
+                throw new Error( // Error wich is catched by "catch()"
+                    `Country "${country}" not found (${response.status})`
+                );
+            return response.json();
+        })
+        .then().then().catch()
+    Necesary catching this types of errors to show the user that an error has occurred
+    Necesary catching this types of errors because is a bad practice to leave this rejected promises
+    --> ALWAYS USE CATCH()
+    If we create a helper function, we don't to write again and again response.json() and the catching manually error
+
+Asynchronous behind the scenes: The event loop (page 212)
+    Promises have priority over the callback queue. Even if the promises have been written after.
+    We remember the JS
+        JS engine: “Heart” of the runtime
+            Heap: Where object are stored in memory
+            Call Stack: Where code is actually executed --> Only ONE thread of execution. No multitasking!
+        Callback queue: Ready-to-be-executed callback functions (coming from events)
+            Call Stack <-> Callback queue ==> Event Loop: Sends callbacks from queue to call stack
+        Web API: APIs provided to the engine
+    Microtask queue: Like callback queue, but for callbacks related to promises. Has priority over callback queue!
+    How it work?
+        1. Callback start with one queue
+            Callback Queue
+                a. Queue of function 1 <==1==
+                b. Queue of function 2
+                c. Queue of function 3
+            Microtask Queue
+        2. Callback finished one queue
+            Callback Queue
+                a. Queue of function 2
+                b. Queue of function 3
+            Microtask Queue
+                a. fetch(URL)
+        3. JS check the microtask queue if exists code and priorice it
+            Callback Queue
+                a. Queue of function 2
+                b. Queue of function 3
+            Microtask Queue
+                a. fetch(URL) <==1==
+                b.  fetch(URL) <==2==
+        4. Once finished all the list of microtask queue, the Callback Queue is executed again, repeating the process
+
+Building a simple promise
+    Structure
+        const NAME = new Promise( EXECUTORFUNCTION (RESOLVE, REJECT) {
+           if(){
+                resolve(FULLFILLVALUEconsumedByTHENmethod)
+            } else{
+                reject(REJECTVALUEcatchByCATCHmethod)
+            }
+        });
+        NAME.then().catch()
+        const lotteryPromise = new Promise(function (resolve, reject) {
+            if (Math.random() > 0.5) {
+                resolve('You win!');
+            } else {
+                reject(new Error('You lost your money'));
+            }
+        });
+        lotteryPromise
+            .then(res => console.log(res))                  // value of resolve()
+            .catch(err => console.log(`Error: ${err}`));    // value of reject()
+        This is NOT async yet, we can simulate with a timer
+    Promisifying
+        In real world most of the time we consume promises
+        We usually only built promises to basically wrap old callback based function into promises
+        Promisifying: convert callback based async behaviour to promise based
+    Creating a fullfilled or rejected promise that trigger inmediately
+        Promise.resolve()
+        Promise.resolve('Inmediatelly').then(x => console.log(x));
+        Promise.reject()
+        Promise.reject('Inmediatelly').then(x => console.log(x)).catch(y => console.log(`Error: ${y}`));
+
+Consuming promises with async/await
+    Since ES2017 is even better and easier way to consume promises, which is called sync await
+    Async function
+        Keep running in the background while performing the code that inside of it
+        Wait for the resulto of the promise (await)
+        const NAME = async function(){
+            await fetch();
+        }
+        const whereAmIAwait = async function (country) {
+            const res = await fetch(`https://restcountries.eu/rest/v2/name/${country}`);
+        };
+    No block the execution. It is possible to stop the code inside the async function, but the async not block the normal code.
+    The Async/await show different but, behind the scenes, it is using promises
+        const res = await fetch(`https://restcountries.eu/rest/v2/name/${country}`);
+        console.log(res);
+        Same than
+        fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(res => console.log(res) );
+        But we can save the values(fetch) into propierties(res)
+    We use "await" to wait for the promise, when the promise give us a value, await trigger
+        const whereAmIAwait = async function (country) {
+            const res = await fetch(`https://restcountries.eu/rest/v2/name/${country}`);            // Await 1
+            const data = await res.json();                                                          // Await 2
+        };
+    Complete example
+        const whereAmIAwait = async function () {
+            const pos = await getPostionAwait();    <====
+            const { latitude: lat, longitude: lng } = pos.coords;
+            const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);     <====
+            const dataGeo = await resGeo.json();    <====
+            const res = await fetch(
+                `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+            );
+            const data = await res.json();      <====
+            renderCountry(data[0]);
+        };
+    Exist the problem that if we have an error in one "await"(), we get a cascade of errors by the following "awaits"
+        Error handling with try/catch
+
+Error handling with try/catch
+    Structure
+        try{
+            logic
+        } catch (ERR) {
+            logic error
+        }
+        try {
+            let y = 1;
+            const x = 2;
+            x = 3;
+        } catch (err) {
+            console.error(err.message);
+        }
+    When we use try/catch the code continue, but if we no use try/catch the code block
+        Without
+            let y = 1;
+            const x = 2;
+            x = 3;
+            cl("Show")
+            Resultado:
+                Error
+        With
+            try{same}catch(err){cl(err)}
+            cl("Show")
+            Resultado:
+                Error
+                Show
+
+Returning values from async functions
+    Not return the string that we want because when JS read this line, trigger the promise and continue with the code
+        const city = whereAmIReturn()
+        console.log(city);
+    Now yes return us the string because "then method" only trigger after the async function
+        whereAmIReturn().then(city => console.log(city));
+    If any error occurs in the try block, the return string will never be reached because the code the code will jump to catch block
+    Even though there was an error in the async function, the promise that this function returns is still fullfilled and no rejected
+        whereAmIReturn().then(city => console.log(city)).catch(err => console.error(err))
+        No trigger the console.error(err) trigger the console.log(city)
+    So, is necesary to rethrow the error in catch block
+        try{}
+        catch (err){
+            throw err
+        }
+        And now works the console.error(err)
+        whereAmIReturn().then(city => console.log(city)).catch(err => console.error(err))
+    Changin the "then" and "catch" methods
+        (async function () {
+            try {
+                const city = await whereAmIReturn();
+                console.log(`2: ${city}`);
+            } catch (err) {
+                console.error(`2: ${err.message}`);
+            }
+            console.log('3: Finished getting location');
+        })();
+
+Running promises in parallel
+    Working one by one
+        const [data1] = await getJSON(
+            `https://restcountries.eu/rest/v2/name/${c1}`
+        );
+        const [data2] = await getJSON(
+            `https://restcountries.eu/rest/v2/name/${c2}`
+        );
+        const [data3] = await getJSON(
+            `https://restcountries.eu/rest/v2/name/${c3}`
+        );
+        The data3 wait for data2 and data2 wait for data1
+    Parallel async running
+        await Promise.all(PROMISE1, PROMISE2, PROMISE3)
+        const data = await Promise.all([
+            getJSON(`https://restcountries.eu/rest/v2/name/${c1}`),
+            getJSON(`https://restcountries.eu/rest/v2/name/${c2}`),
+            getJSON(`https://restcountries.eu/rest/v2/name/${c3}`),
+        ]);
+        console.log(data.map(d => d[0].capital));
+    When one have an error, Promise.all() reject all an error
+
+Other promise combinators: race, allsettled and any
+    Promise.race()
+        Receive an array of promises and return a promise settled as soon as one of the input promises settles. No matter if is fullfilled or reject
+        Settle: means that a value is avaiable, not matter if the promise is rejected of fullfilled
+    --> Promise.all() and Promise.race() are the MOST important promise combinators
+        Structure
+            await Promite.race([racer1, racer2, racer3,etc])
+            const res = await Promise.race([
+                getJSON(`https://restcountries.eu/rest/v2/name/japan`),
+                getJSON(`https://restcountries.eu/rest/v2/name/usa`),
+                // getJSON(`https://restcountries.eu/rest/v2/name/canadaassda`), // If one is rejected, all be rejected
+                getJSON(`https://restcountries.eu/rest/v2/name/canada`),
+            ]);
+        Very usefull to prevent against never ending promises or very long running promises(bad 3g)
+            const timeout = function (seconds) {
+                return new Promise(function (_, reject) {
+                    setTimeout(function () {
+                        reject(new Error('request took to loong!'));
+                    }, seconds);
+                });
+            };
+            Promise.race([
+                getJSON(`https://restcountries.eu/rest/v2/name/japan`),
+                getJSON(`https://restcountries.eu/rest/v2/name/usa`),
+                timeout(0.25),
+            ]);
+            When 0.25 seconds have been passed, the timeout complete and the race trigger into the timeout
+    Promise.any()
+        Since ES2021
+        Receive an array of promises and return the first fullfilled promise, ignore the rejected promises
+        Very similar to Promise.race() but ignoring the rejected
+        Structure
+            Promise.any([
+                // Just an example of how works
+                Promise.reject('NOT Success'),
+                Promise.resolve('Success 1'),
+            ])                                      // Resultado: Success 1
+            Promise.race([
+                // Just an example of how works
+                Promise.reject('NOT Success'),
+                Promise.resolve('Success 1'),
+            ])                                      // Resultado: NOT Success
+    Promise.allSettled()
+        Since ES2020
+        Receive an array of promises and return an array of all other promises. No matter if fullfilled or rejected
+        Similar to Promise.all()
+            Promise.all() will short circuit as soon as one promise rejects
+            Promise.allSettled() never short circuit
+        Structure
+            Promise.allSettled([
+                // Just an example of how works
+                Promise.resolve('Success'),
+                Promise.resolve('Success'),
+                Promise.reject('NOT Success'),
+                Promise.resolve('Success'),
+            ])                                          // trigger all and return the 4
+            Promise.all([
+                // Just an example of how works
+                Promise.resolve('Success'),
+                Promise.resolve('Success'),
+                Promise.reject('NOT Success'),
+                Promise.resolve('Success'),
+            ])                                          // Error, stop triggering. NOT show nothing
+    
+
+
+
+
+    

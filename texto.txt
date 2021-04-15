@@ -194,8 +194,127 @@ Cosas interesantes que saber
         array = [Objeto1, Objeto2, etc]
         const [OB1, OB2, etc] = array
         DOnde OB1 = { lo que este dentro de Objeto1 }
-    ELlcodigo que es dificil de entender es mal codigo porque conyeva a mas bugs
-
+    El codigo que es dificil de entender es mal codigo porque conyeva a mas bugs
+    Babel: programa para transformar a ES5
+    NPM
+        Inizializar NPM
+            Guarda todos los paquetes usados y lleva un control de versiones. Crea un JSON
+            npm init
+        Instalar librerias
+            npm i NOMBREPAQUETE
+            Crea una carpeta "node_modules" donde guarda todas las librerias usadas
+        Compartir proyecto
+            Si queremos compartir nuestro proyecto o cambiar de PC, no debemos enviar la carpeta "node_modules"
+            NPM automaticamente lee e instala las liberias necesarias gracias al JSON
+    Mirar PARCEL y NPM Scripts para mixear y comprimir librerias en un unico archivo
+        Instalar Parcel
+            npm i parcel-bundler --save-dev
+            npm i parcel --save-dev
+        NPM Scripts
+            Se escriben en el archivo JSON creado por NPM, en la parte de scripts
+            Nos permiten acceder desde la terminal a ordenes complejas pero de forma simple
+            Por ejemplo, para mixear todas las librerias utilizadas en un solo archivo, pero con codigo no usado
+                En el JSON escribimos
+                "scripts": {
+                    "start": "parcel index.html",
+                },
+                Accedemos al script desde la terminal
+                npm run start
+            Por ejemplo, para comprimir, mixear todas las librerias y eliminar el codigo no usado
+                En el JSON escribimos
+                "scripts": {
+                    "build": "parcel build index.html"
+                },
+                Accedemos al script desde la terminal
+                npm run build
+        Hot module replacement
+            Escribimos el nuestro script.js lo siguiente
+            if (module.hot) { module.hot.accept() }
+            Es una orden que solo entiende Parcel, no aparecera en el codigo final
+            Lo que hace es que cada vez que hagamos un cambio en el script, no recarga la pagina, solo modifica lo que hemos escrito
+        Usando Parcel no es necesario escribir toda la URL para acceder a las librerias, las busca autoamticamente
+            import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+            import cloneDeep from 'lodash-es';
+    Transformar a ES5
+        Parcel lo hace de forma automatica pero solo la sintaxis como transformar arrow function en functions normales
+        Para todo lo demas debemos instalar e importar las siguientes librerias
+        npm i core-js               Para metodos como find o Promise
+        import 'core-js/stable/array/find' (Solo las que usemos y no todas para mejor rendimiento)
+        npm i regenerator-runtime   Para funciones asincronas
+        import 'regenerator-runtime/runtime'
+    Como escribir codigo
+        Código limpio
+            Escribir código para que otros puedan entenderlo
+            Escriba código para que pueda entenderlo en 1 año
+            Evitar soluciones demasiado "inteligentes" y complicadas
+            Utilice nombres de variables descriptivos: lo que contienen y lo que hacen
+        Generalidades
+            Utilice el principio DRY (refactorice su código)
+            No contamine el espacio global, encapsule en su lugar
+            No utilice "var"
+            Utilice comprobaciones de tipo fuertes (=== y !==)
+        Funciones
+            Generalmente, las funciones deben hacer sólo una cosa
+            No utilice más de 3 parámetros en la función
+            Utilice parámetros por defecto siempre que sea posible
+            Por lo general, devuelva el mismo tipo de datos que recibió
+            Utilizar Arrow Functions hace el código más legible
+        OOP
+            Utilizar clases ES6
+            Encapsular los datos y no mutar desde fuera de la clase
+            Implementar method chaining
+            No usar Arrow FUnctions como métodos (en objetos regulares)
+        Evitar el código anidado (una funcion dentro de otra y de otra y de otra...)
+            Utilizar return anticipado (tambien llamado "Guard Clauses")
+            Utilizar operadores ternarios (condicionales) o lógicos en lugar de if
+            Utilizar múltiples if en lugar de if/else-if
+            Evitar los bucles for, utilizar métodos de array
+            Evite las APIs asíncronas basadas en callbacks
+        Código asíncrono
+            Consuma promesas con async/await para una mejor legibilidad
+            Siempre que sea posible, ejecute las promesas en paralelo (Promise.all)
+            Gestionar los errores y los rechazos de las promesas
+    Seleccionar todas las palabras con el mismo nombre
+        Command + D
+    En vez de usar FOR loop usar map() que funciona igual para arrays
+        for (let i = 0; i < arr.lenght; i++)
+            doubled[i] = arr[i] *2;
+        const doubled = arr.map(n => n * 2)
+    Paradigmas imperativos y declarativos
+        Imperativos
+            Como hacer las cosas
+            Ejemplo: paso por paso para hacer una tarta
+            Ejemplo:
+                const arr = [2, 4, 6, 8];
+                const doubled = [];
+                for (let i = 0; i < arr.lenght; i++)
+                    doubled[i] = arr[i] *2;
+        Declarativos
+            Que hacer
+            Ejemplo: descripcion de la tarta ==> Pero es necesario acudir al paso por paso para hacer la tarta
+            Ejemplo:
+                const arr = [2, 4, 6, 8];
+                const doubled = arr.map(n => n * 2)
+    Principios de programacion funcional
+        Paradigma de programacion declarativo
+        Basado en la idea de escribir codigo combinando "funciones puras", y evitando "efectos secundarios" y evitando mutar datos
+            Efectos secundarios: modificacion o mutacion de datos fuera de la funcion
+            Funciones puras: funciones sin efectos secundarios. No dependen de variables externas.
+            Inmutabilidad: Los datos nunca son modificados! En vez de eso, los datos son copiados y modificada la copia y devuelta
+                Object.freeze()
+                const arr = Object.freeze({name: "Jose", age: "23"})
+        Ejemplo de programacion functional
+            React
+        Tecnicas de programacion funcional
+            Evitar mutaciones de datos
+            Usar metodos que no produzcan efectos secundarios
+            Hacer transformacion de datos con metodos como map(), filter() o reduce()
+            Intentar evitar efectos secundarios, aunque muchas veces no se puede evitar
+        Sintaxis declarativa
+            Usar array and object destructuring
+            Usar spread operator (...)
+            Usar el operador ternario
+            Usar template literals
 
 
 
@@ -4049,7 +4168,349 @@ Other promise combinators: race, allsettled and any
             ])                                          // Error, stop triggering. NOT show nothing
     
 
+---------------------- MODERN JAVASCRIPT DEVELOPMENT: MODULES AND TOOLING ----------------------
+
+An overview of modern JS development
+    In the past, we used to write all our code into one big script or maybe multiple scripts
+    Today, we divide our projects intro multiple modules
+        This modules can share data between them and make our code more organized and maintainable
+        We can include 3rd party modules(called packages) into our own code
+    How it works?
+        Development
+            modules
+            3rd-party modules
+        Build process
+            Building: Join all modules into one file. Eliminate unused code and compress our code.
+                Older browsers don't support modules
+                Better for performance
+            Transpiling/polyfilling: Convert modern JavaScript back to ES5
+                Using a tool called "Babel"
+        JS bundle
+    npm repository
+        Node package manager (originary for NodeJS but today is for all packages)
+        Contains open-source packages to include 3rd-party code in our own code. Development
+            NPM is the repository in which packages live
+            NPM is a program that we use on our computers to install and manage this packages
+            Examples: React, jQuery, Leaflet, etc.
+        Contains development tools that help build our applications. Build process
+            Most common Build tools are "webpack"(more used) and "Parcel"(more easy use and more friendly)
+            Take our raw code and transform it into a JS bundle
+            Examples: live-server, Parcel, Babel, etc.
+
+An overview of modules in JS
+   An overview of modules in general
+        Reusable piece of code that encapsulates implementation details.
+        Usually a standalone file, but it doesn’t have to be.
+        Have imports and exports
+            Other modules from which we import are called dependencies of the importing module. 
+                Cannot work without the code from the external module
+            Public API
+                Exposed code for other codes to consume
+        Example
+            import { rand } from './math.js'        // Import ==> Dependency
+            const diceP1 = rand(1,6,2)              // Module code
+            const diceP2 = rand(1,6,2)              // Module code
+            const scores = { diceP1, diceP2 }       // Module code
+            export { scores }                       // Export ==> Public API
+        Why modules?
+            Compose software: Modules are small building blocks that we put together to build complex applications
+            Isolate components: Modules can be developed in isolation without thinking about the entire codebase
+            Abstract code: Implement low-level code in modules and import these abstractions into other modules
+            Organized code: Modules naturally lead to a more organized codebase
+            Reuse code: Modules allow us to easily reuse the same code, even across multiple projects
+    Native JS (ES6) modules
+        JS has a native built-in module system
+        Modules stored in files, exactly one module per file.
+        Differences into old JS (scripts) and modern JS (ES6 modules)
+                                        ES6 module                      Script
+            Top-level variables         Scoped to module (privates)     Global
+            Default mode                Strict mode                     “Sloppy” mode
+            Top-level this              undefined                       window
+            Imports and exports         YES                             NO
+                                        Need to happen at top-level. Imports are hoisted!
+            HTML linking                <script type="module">          <script>
+            File downloading            Asynchronous                    Synchronous
+    How ES6 modules are imported
+        We use an example to understand
+        Example (index.js):
+            import { rand } from './math.js'
+            import { showDice } from './dom.js'
+            const dice = rand(1,6,2)
+            showDice(dice)
+        1. Parsing index.js
+            Parsing: read the code but without executing it
+        2. Importing modules before execution
+            Modules are imported synchronously
+                Only after all imported modules have been downloaded and executed the main index.js module will be executed.
+            Possible thanks to top-level (“static”) imports, which make imports known before execution
+            This makes bundling and dead code elimination possible
+        3. Asynchronous downloading math.js and dom.js
+            math.js
+                const rand = () => { randon numbers }
+                export { rand }
+            dom.js
+                const showDice = () => { display dice }
+                export { showDice }
+        4. Linking imports to math.js and dom.js exports
+            Live connection, NOT copies, like a pointer
+            rand is the same into math.js and index.js
+            showDice is the same into dom.js and index.js
+            If we change the value of rand into math.js, the value of rand into index.js also change
+            If we change the value of showDice into index.js, the value of showDice into dom.js also change
+            --> Important to understand, unique to ES6 modules
+        5. Execution math.js and dom.js
+        6. Execution index.js
+
+Exporting and importing in ES6 modules
+    Put in HTML the type
+        <script type="module" defer src="script.js"></script>
+    Import the extra module
+        import './shoppingCart.js';
+        import './shoppingCart';        // ES modules works without the extension
+    The imports are executed first, before the code
+        cl("Not imported")
+        import './shoppingCart.js'; // With cl("Imported")
+        Resultado:
+            Imported
+            Not imported
+        This is the reason why we write the imports at the top of the file.
+    The scope in modules are private, this is the reason why we cannot do
+        import './shoppingCart.js';     // With const codigo = 10
+        cl(codigo)                      // Resultado: Error
+        But, we can use it with exports
+    Named Exports
+        Simplest way of exporting because we only put "export" in front of we want to export
+        export const codigo2 = 10
+        export { totalPrice, totalQuantity };
+            We can change the name of the import
+            export { totalPrice as price, totalQuantity };
+        Example
+            import {codigo2, price, totalQuantity as tq} from './shoppingCart.js';
+            cl(codigo2)                 // Resultado: 10
+            cl(price, totalQuantity)
+        Import all the modules at the same time
+            import * as ShoppingCart from './shoppingCart';
+                ShoppingCart is like a Class.
+            ShoppingCart.addToCart('bread', 5);
+            const importando = ShoppingCart.totalPrice;
+                console.log(importando);
+    Default Exports
+        We use when we only want to export one thing per module ==> default
+            export default VALUE
+            export default function () { LOGIC };
+            export default totalPrice
+        Is necesary to give it a name to the value when we import it
+            import add from "./"
+    Importing named and default exports at the same time
+        import DEFAULT, {NAMED} from "./"
+        import add, {} from "./"
+        In practice we NEVER mixed default and named exports in the same module
+        Use named export or default exports dependind the situation but never mixed in the same module
+    Pointing the variables
+        In shoppingCart cart is empty. cart = []
+        import {addToCart, cart} from "./shoppingCart.js"
+        addToCart("bread", 2)
+        addToCart("pizza", 5)
+        cart variable is modified in script.js and shoppingCart.js because both are pointing to the same variable
+        cl(cart)
+
+CommonJS modules
+    Exists different module system, and CommonJS is particulary important in the world of JS
+    Have been used in NodeJS
+    All the modules still use the CommonJS system ===> npm was intended for NodeJS
+    One file is one module
+    How it seems (not work in the browser, but yes in NodeJS)
+        Export
+            export.
+            export.addToCart = function (product, quantity) {
+                cart.push({ product, quantity });
+                console.log(`${quantity} ${product} added to cart`);
+            };
+        Import
+            require('URL')
+            const { addToCart } = require('./shoppingCart.js')
+
+A brief introduction to the command line (terminal always in unix: mac and linux)
+    Show directory
+        ls
+    Change directory
+        Down: "cd NAMEFOLDER"
+        Up: "cd .." "cd ../.."
+    Create Folder
+        mkdir NAME
+        mkdir proyecto
+    Create Files
+        touch NAME.EXTENSION
+        touch index.html
+        touch colors.css script.js modules.js
+    Delete Files
+        rm NAME.EXTENSION
+        rm modules.js
+    Move Files
+        mv NAME.EXTENSION LOCATION
+        move colors.css ../otroprojecto
+    Delete Folder
+        rmdir NAME          For empty folders
+        rmdir otroprojecto
+        rm -R NAME          For all folders
+        rm -R proyecto
+
+Introduction to NPM
+    Version
+        npm -v
+    Initialize
+        npm init
+        Write the propierties or press enter for default values
+        Create a JSON file: file which save the configutarion of our project
+    Installing libraries using npm
+        See the documentation of the library
+        npm install PACKAGENAME
+        npm i PACKAGENAME
+        NPM create a new line in the JSON and create a folder called "node_modules" which the libraries
+    Lodash
+        Library with a ton of useful functions for arrays, objects, functions, dates and more
+        npm i lodash        // CommonJS modules (necesary to use a module bundler to use it)
+        npm i lodash-es     // Without CommonJS
+    If we want to move our project to another computer or share our project we NEVER shave the folder "node_modules".
+        The JSON can install the packages automatically
+        npm i
+        Without packages names
+
+Bundling with PARCEL and NPM scripts
+    Bundle different bundles together. Different JS files into only one
+    Install Parcel
+        npm i parcel --save-dev
+        npm i parcel-bundler --save-dev
+        devDependency is like a tool that we need to build our application, but is not a dependency that we include in our code
+    Parcel is another Command Line Interface ===> Terminal
+    We can use NPX or NPM scripts
+    Hot module replacement
+        if (module.hot) { module.hot.accept() }
+        Only readable by Parcel, not include into final bundle
+        When we change one of the modules (trigger a rebuild), trigger the action but without all the page reload
+        The page not reload, only apply the changes
+    Not necesary to write all the URL for the libraries, PARCEL fount it
+        import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+        import cloneDeep from 'lodash-es';
+    NPX
+        npx parcel index.html
+        Parcel create a live-server, a folder "dist" an a folder ".parcel-cache"
+        The code in folder "dist" is the code that we will sent to our final users
+            Unused code still in the file, we delete it later
+    NPM Scripts
+        Is the form that is more used
+        Allow us to automate repetitive tasks
+        In the file JSON of the NPM, in the scripts we write
+            "start": "parcel index.html"
+        In the terminal we write
+            npm run start
+        Do it the same thing than NPX but with a simple command
+    Build the final bundle, compress and delete code unused. We need a parcel command and we added to the script NPM
+        "build": "parcel build index.html"
+        In the terminal we write
+        npm run build
+        The html file is compressed
+        The js files is compressed
+    Install packages globally
+        NPM i parcel -g PACKAGENAME
+        For example, the live-server was installed with this mode and work on all the folders that we work
+        Is recomendable install the packages locally, to have allways the latests version
+
+Configuring BABEL and Polyfilling
+    Transpile: transform supermodern code back to ES5 code
+    Parcel automatically uses BABEL to transpile our code
+    BABEL only transpile ES6 syntax
+        arrow functions, classes, const, spread operator, etc
+    But cannot convert ES6 new features added to the language
+        find, Promises
+    This new features can simply NOT BE TRANSPILE but it is possible to polyfilling
+    Polyfilling
+        Recreate defined function and make it avaible in this bundle so that the codes can then use it
+    The best option is to install a library called "core-js"
+        npm i core-js
+        import 'core-js';
+        This import all the features, so is better to import only the core-js new features that we are using
+        import "core-js/stable/array/find"
+    Is necesary to install another package called "regenerator-runtime" to polyfilling async functions
+        npm i regenerator-runtime
+        import 'regenerator-runtime/runtime'
+
+Review: writing clean and modern JS
+    Ceadable code
+        Write code so that others can understand it
+        Write code so that you can understand it in 1 year
+        Avoid too “smart” and overcomplicated solutions
+        Use descriptive variable names: what they contain
+        Use descriptive function names: what they do
+    General
+        Use DRY principle (refactor your code)
+        Don’t pollute global namespace, encapsulate instead
+        Don’t use var
+        Use strong type checks (=== and !==)
+    Functions
+        Generally, functions should do only one thing
+        Don’t use more than 3 function parameters
+        Use default parameters whenever possible
+        Generally, return same data type as received. Example: receive 2 o 3 numbers, return a number.
+        Use arrow functions when they make code more readable
+    OOP
+        Use ES6 classes
+        Encapsulate data and don’t mutate it from outside the class
+        Implement method chaining
+        Do not use arrow functions as methods (in regular objects)
+    Avoid nested code (functions into functions into functions...)
+        Use early return (=guard clauses)
+        Use ternary (conditional) or logical operators instead of if
+        Use multiple if instead of if/else-if
+        Avoid for loops, use array methods instead
+        Avoid callback-based asynchronous APIs
+    Asynchronous code
+        Consume promises with async/await for best readability
+        Whenever possible, run promises in parallel (Promise.all)
+        Handle errors and promise rejections
+
+Declarative and Functional JS principles
+    Two fundamentally different ways of writing code (paradigms): Imperative and Declarative
+    Imperative
+        Programmer explains “HOW to do things”
+        We explain the computer every single step it has to follow to achieve a result
+        Example: Step-by-step recipe of a cake
+        Code
+            const arr = [2, 4, 6, 8];
+            const doubled = [];
+            for (let i = 0; i < arr.lenght; i++)
+                doubled[i] = arr[i] *2;
+    Declarative
+        Programmer tells “WHAT do do”
+        We simply describe the way the computer should achieve the result
+        The HOW (step-by-step instructions) gets abstracted away
+        Example: Description of a cake ==> The person go to step-to-step to make the cake
+        Code
+            const arr = [2, 4, 6, 8];
+            const doubled = arr.map(n => n * 2)
+    Functional programming principles
+        Declarative programming paradigm
+        Based on the idea of writing software by combining many "pure functions", avoiding "side effects" and avoiding "mutating" data
+            Side effect: Modification (mutation) of any data outside of the function (mutating external variables, logging to console, writing to DOM, etc.)
+            Pure function: Function without side effects. Does not depend on external variables. Given the same inputs, always returns the same outputs.
+            Immutability: State (data) is never modified! Instead, state is copied and the copy is mutated and returned.
+                Object.freeze()
+                const arr = Object.freeze({name: "Jose", age: "23"})
+        Examples
+            React
+            Redux
+    Functional programming techniques
+        Try to avoid data mutations
+        Use built-in methods that don’t produce side effects
+        Do data transformations with methods such as .map(), .filter() and .reduce()
+        Try to avoid side effects in functions: this is of course not always possible!
+    Declarative syntax
+        Use array and object destructuring
+        Use the spread operator (...)
+        Use the ternary (conditional) operator
+        Use template literals
 
 
+---------------------- FORKIFY APP: BUILDING A MODERN APPLICATION ----------------------
 
-    
+

@@ -266,6 +266,7 @@ Cosas interesantes que saber
             No usar Arrow FUnctions como métodos (en objetos regulares)
         Evitar el código anidado (una funcion dentro de otra y de otra y de otra...)
             Utilizar return anticipado (tambien llamado "Guard Clauses")
+                if (!id) return;
             Utilizar operadores ternarios (condicionales) o lógicos en lugar de if
             Utilizar múltiples if en lugar de if/else-if
             Evitar los bucles for, utilizar métodos de array
@@ -315,6 +316,133 @@ Cosas interesantes que saber
             Usar spread operator (...)
             Usar el operador ternario
             Usar template literals
+SASS
+    Una forma mejor de escribir CSS
+    Tiene mejoras con respecto a CSS
+    Es una mejor opcion para escribir largas cadenas de CSS y es mucho mas sencillo
+    Los navegadores aun no entienden SASS, es necesario convertirlo a CSS mediante Parcel
+Inicio proyecto NPM
+    1. Iniciar npm
+        npm init
+    2. Escribir los scripts en "package.JSON"
+        "scripts": {
+            "start": "parcel index.html",
+            "build": "parcel build index.html"
+        },
+    3. Instalar Parcel
+        npm i parcel
+    4. Iniciar Parcel
+        npm run start
+Hash
+    Todo lo que viene despues de la URL pura se llama "HASH"
+    forkify-v2.netlify.app/#5ed6604591c37cdc054bc886
+    El hash seria
+        #5ed6604591c37cdc054bc886
+    Para obtener el hash (No queremos el #)
+        const id = window.location.hash.slice(1);
+    El cambio del hash es un evento que podemos escuchar
+        window.addEventListener("hashchange", function(){})
+Si tenemos varios listeners que llamen a la misma funcion podemos usar un array y simplificar la llamada
+    Varios listeners
+        window.addEventListener('hashchange', showRecipe);
+        window.addEventListener('load', showRecipe);
+    Lo mismo pero en una linea con array
+        ['hashchange', 'load'].forEach(e => window.addEventListener(e, showRecipe));
+Normalmente se usan dos archivos para parametros y funciones que se usaran continuamente
+    config.js ===> Usado para establecer las propiedades constantes que se usaran continuamente
+    helpers.js ===> Usado para establecer las funciones que se usaran continuamente
+    Se usan las letras mayusculas para variables o funciones que no cambian nunca ==> Archivo "config.js" o archivo "helpers.js"
+Revisar: Publisher-Suscriber pattern 
+Obtener los datos de un formulario
+    Para obtenerlo como Array
+        const dataArray = [...new FormData(this)];      // Resultado: [ ["title","Plato1"], ["sourceUrl","URL"] ]
+    Para transformar el Array en un objeto
+        const data = Object.fromEntries(dataArray);     // Resultado: { title: "Plato1", sourceUrl: "URL" }
+    Para el siguiente formato de HTML
+        <div class="overlay hidden"></div>
+        <div class="add-recipe-window hidden">
+            <button class="btn--close-modal">&times;</button>
+            <form class="upload">
+                <div class="upload__column">
+                    <h3 class="upload__heading">Recipe data</h3>
+                    <label>Title</label>
+                    <input value="TEST" required name="title" type="text" />
+                    <label>URL</label>
+                    <input value="TEST" required name="sourceUrl" type="text" />
+                    <label>Image URL</label>
+                    <input value="TEST" required name="image" type="text" />
+                    <label>Publisher</label>
+                    <input value="TEST" required name="publisher" type="text" />
+                    <label>Prep time</label>
+                    <input
+                        value="23"
+                        required
+                        name="cookingTime"
+                        type="number"
+                    />
+                    <label>Servings</label>
+                    <input value="23" required name="servings" type="number" />
+                </div>
+
+                <div class="upload__column">
+                    <h3 class="upload__heading">Ingredients</h3>
+                    <label>Ingredient 1</label>
+                    <input
+                        value="0.5,kg,Rice"
+                        type="text"
+                        required
+                        name="ingredient-1"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                    <label>Ingredient 2</label>
+                    <input
+                        value="1,,Avocado"
+                        type="text"
+                        name="ingredient-2"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                    <label>Ingredient 3</label>
+                    <input
+                        value=",,salt"
+                        type="text"
+                        name="ingredient-3"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                    <label>Ingredient 4</label>
+                    <input
+                        type="text"
+                        name="ingredient-4"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                    <label>Ingredient 5</label>
+                    <input
+                        type="text"
+                        name="ingredient-5"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                    <label>Ingredient 6</label>
+                    <input
+                        type="text"
+                        name="ingredient-6"
+                        placeholder="Format: 'Quantity,Unit,Description'"
+                    />
+                </div>
+
+                <button class="btn upload__btn">
+                    <svg>
+                        <use href="src/img/icons.svg#icon-upload-cloud"></use>
+                    </svg>
+                    <span>Upload</span>
+                </button>
+            </form>
+        </div>
+Transformar un Array en un Objeto
+    const listaA = []
+    const listaO = Object.fromEntries((lista)
+Transformar un Objeto en un Array
+    const listaO = {}
+    const listaA = Object.entries(listaO)
+sfsdfsdf
 
 
 
@@ -4460,6 +4588,7 @@ Review: writing clean and modern JS
         Do not use arrow functions as methods (in regular objects)
     Avoid nested code (functions into functions into functions...)
         Use early return (=guard clauses)
+            if (!id) return;
         Use ternary (conditional) or logical operators instead of if
         Use multiple if instead of if/else-if
         Avoid for loops, use array methods instead
@@ -4512,5 +4641,85 @@ Declarative and Functional JS principles
 
 
 ---------------------- FORKIFY APP: BUILDING A MODERN APPLICATION ----------------------
+
+The MVC architecture
+    Why worry about architecture?
+        STRUCTURE ==> Like a house, software needs a structure: the way we organize our code
+        MAINTAINABILITY ==> A project is never done! We need to be able to easily change it in the future
+        EXPANDABILITY ==> We also need to be able to easily add new features
+        Triangle of architecture
+                        Structure
+                The perfect architecture
+            Maintainability     Expandability
+        We can create our own architecture (Mapty project). Easy projects
+        We can use a well-established architecture pattern like MVC, MVP, Flux, etc. (this project). More complex projects
+        We can use a framework like React, Angular, Vue, Svelte, etc. Big projects and modern JS
+    Components
+        Business Logic
+            Code that solves the actual business problem
+            Directly related to what business does and what it needs
+            Example: sending messages, storing transactions, calculating taxes...
+        State
+            Essentially stores all the data about the application
+            Should be the “single source of truth”
+            UI should be kept in sync with the state < Keeping in sync with <--> >
+            State libraries exist ( Redux, MobX)
+        HTTP Library
+            Responsible for making and receiving AJAX requests
+            Optional but almost always necessary in real-world apps
+        Application Logic (Router)
+            Code that is only concerned about the implementation of application itself
+            Handles navigation and UI events
+        Presentation logic (UI layer)
+            Code that is concerned about the visible part of the application
+            Essentially displays application state < <--> Keeping in sync with >
+    The Model View Controller (MVC) architecture
+        Model
+            Business logic
+            State
+            HTTP library
+        Controller
+            Application logic
+                Bridge between model and views (which don’t know about one another)
+                Handles UI events and dispatches tasks to model and view
+        View
+            Presentation logic
+        Example of a flow of actions and data (click)
+            Web <__3__> Model   <--2--- Controller  ---2--> View __5__> User
+                                ___4__>             ___4__>
+                (--> Connected by function call and import)
+                (__> Data flow)
+            0. Clicking
+            1. Controller handdle the click event
+            2. Update the user interface and ask the model for data
+            3. Might involve doing and AJAX request to the web
+            4. When the data arrives, the controller takes the data and sends it to the view
+            5. The view will render that data to the user interface
+
+Event handling in MVC: Publisher-Suscriber pattern
+    Design patterns in programming
+        Standards solutions to certains kinds of problems
+    Publisher: Code that knows when to react
+    Suscriber: Code that wants to react
+    Subscribe to publisher by passing in the subscriber function
+        As soon as the program loads, the init function is called which in turn immediately calls the function from the view
+    Events should be handled in the controller (otherwise we would have application logic in the view)
+    Events should be listened for in the view (otherwise we would need DOM elements in the controller)
+
+Writing documentation in JSDocs
+    Easily understand what exactly the functional is doing
+    URL
+        https://jsdoc.app/
+    Initialize
+        /** */
+    Writing
+        /**
+        * Description
+        * @param {Object | Object[]} "parameter of data" ShortDescription       // Object or Array of objects
+        * @param { TYPEparameter } render                                       // Parameter optional
+        * @returns {undefined | string} A markup string is returned if render = false
+        * ... much more options
+        */
+    If we put the mouse on functions, the JSDocs give us all the information
 
 

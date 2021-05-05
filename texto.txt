@@ -4726,8 +4726,20 @@ Writing documentation in JSDocs
 ---------------------- Setting up GIT and deployment ----------------------
 
 Simple deployment with netlify
-
-
-
+    The site lives in many locations, not only in one server.
+GIT
+    Reseting until the previous commit
+        git reset --hard HEAD
+    Know all the commits
+        git log             // press Q to exit
+    Reseting until a specific commit
+        git reset --hard 8070e620d1921d3608a521749e33d5e13909fe94
+    Create a new branch
+        git branch NAME
+        git branch new-feature
+    Switch to branch
+        git checkout NAME
+        git checkout new-feature
+    
 
 

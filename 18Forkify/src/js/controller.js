@@ -144,6 +144,14 @@ const controlAddRecipe = async function (newRecipe) {
 };
 
 console.log(
+    '------------------------- New feature branch -------------------------'
+);
+
+const newFeature = function () {
+    console.log('Wellcome to the application!');
+};
+
+console.log(
     '------------------------- Event Handlers in MVC: Publisher-Suscriber pattern -------------------------'
 );
 const init = function () {
@@ -154,6 +162,7 @@ const init = function () {
     searchView.addHandlerSearch(controlSearchResults);
     paginationView.addHandlerClick(controlPagination);
     addRecipeView.addHandlerUpload(controlAddRecipe);
+    newFeature();
 };
 init();
 

@@ -4740,6 +4740,29 @@ GIT
     Switch to branch
         git checkout NAME
         git checkout new-feature
-    
+    Merge branches
+        git merge NAMEofBRANCH
+        Example:
+            we stay in main branch and we want merge with new-feature branch
+            git checkout main
+            git merge new-feature
+            The branches merge
+    Cheat sheet
+        https://education.github.com/git-cheat-sheet-education.pdf
+    Create a new repository
+        git init
+        git add README.MD
+            MD: MarkDown. For write simple documents.
+        git commit -m "first commit"
+        git push origin NAMEofBRANCHtoPUSH
+            git push origin new-feature
+            git push origin main
+    Remove branch locally
+        git branch -d NAME
+        git branch -d new-feature
+    Remove branch remotely
+        git branch --delete NAME
+        git branch --delete new-feature
+
 
 

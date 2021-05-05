@@ -4723,3 +4723,11 @@ Writing documentation in JSDocs
     If we put the mouse on functions, the JSDocs give us all the information
 
 
+---------------------- Setting up GIT and deployment ----------------------
+
+Simple deployment with netlify
+
+
+
+
+
